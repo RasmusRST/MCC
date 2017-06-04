@@ -1,0 +1,61 @@
+# .gitignore file used by Authel Systems for C/C++
+# development on linux, windows and arm embedded.
+#
+# By Rasmus Steffensen 17. may 2017
+
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+build/
+bin/
+
+# GCC #
+###################
+*.bin
+*.dmp
+*.elf
+*.hex
+*.map
+*.so
+*.lst
+*.list
+*.d
+
+# vscode #
+###################
+.vscode/
+
+# Packages #
+############
+# it's better to unpack these files and commit the raw source
+# git has its own built in compression methods
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+
+# Logs and databases #
+######################
+*.log
+*.sql
+*.sqlite
+*.csv
+
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
