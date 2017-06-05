@@ -3,6 +3,8 @@
 #include "y.tab.h"
 %}
 
+%option nounistd
+
 %%
 ("+"|"-")?[0-9]+("."[0-9]+)?((E|e|exp)("+"|"-")?[0-9]+)			return SCIENTIFICVAL;
 [0-9]+                  yylval.ival=atoi(yytext); return NUMBER;

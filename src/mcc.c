@@ -1,5 +1,7 @@
+
+
 #include<stdio.h>
-#include "../build/y.tab.h"
+#include "y.tab.h"
 
 typedef struct yy_buffer_state * YY_BUFFER_STATE;
 extern int yyparse();

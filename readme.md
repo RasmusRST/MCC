@@ -6,7 +6,17 @@ Matrix addition
 Matrix multiplication
 
 ### How to use ###
+To compile the syntax analysis with flex/yacc, run cygwin:
 ```
-./make
-./mcc
+./make.sh
 ```
+
+To compile the compiler, run git bash (mingw) in the root:
+```
+mkdir build
+cd build
+cmake .. -G "Visual Studio 14 Win64"
+```
+
+Run the mcc.sln in the build folder and set mcc as startup directory,
+then everything should work.

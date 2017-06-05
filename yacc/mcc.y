@@ -45,7 +45,7 @@ statements:
                   | assignstmt				  
 				  ;
 
-assignstmt:       NAME '=' expr { printf("There was an assignment of %s to %i\n at line %i",$1,$3,lineno); }
+assignstmt:       NAME '=' expr { printf("There was an assignment of %s to %i\n at line %i",$1,$3,2); }
 ;
 
 expr : expr '+' term { $$ = $1 + $3; }
