@@ -3,6 +3,7 @@
 #include<stdio.h>
 #include "y.tab.h"
 #include "globals.h"
+#include "util.h"
 
 /* Used to pass a string to yacc */
 typedef struct yy_buffer_state * YY_BUFFER_STATE;

@@ -1,6 +1,8 @@
 #ifndef _GLOBALS_H_
 #define _GLOBALS_H_
 
+#include <stddef.h>
+
 typedef enum
 /* book-keeping tokens */
 {

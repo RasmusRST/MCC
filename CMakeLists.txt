@@ -8,5 +8,17 @@ add_library(LexYacc "generated/y.tab.c"
                     "generated/lex.yy.c")
 INCLUDE_DIRECTORIES("generated/")
 
-add_executable(mcc src/mcc.c)
+SET(SOURCES
+  "src/util.c"
+)
+
+SET(HEADERS
+  "include/globals.h"
+  "include/util.h"
+)
+
+source_group("Utilities" FILES ${SOURCES})
+
+add_executable(mcc "src/mcc.c" ${SOURCES} ${HEADERS})
+
 target_link_libraries(mcc LexYacc)
