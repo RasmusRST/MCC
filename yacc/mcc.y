@@ -1,6 +1,7 @@
 %{
 #include <stdio.h>
 #include <string.h>
+#include "globals.h"
 
 int yydebug=0;
 
@@ -30,11 +31,10 @@ int yywrap()
 %token <name> NAME
 %token SCIENTIFICVAL
 
-%type <ival> term factor expr
+%type <name> var
 
 
 %%
-
 compstmts:        /*empty */
                 | compstmts statements ';'
 				| compstmts statements
@@ -45,17 +45,34 @@ statements:
                   | assignstmt				  
 				  ;
 
-assignstmt:       NAME '=' expr { printf("There was an assignment of %s to %i\n at line %i",$1,$3,2); }
+assignstmt:       var '=' expr { printf("There was an assignment of %s",$1); }
 ;
 
-expr : expr '+' term { $$ = $1 + $3; }
+index:
+				  NUMBER
+				| NUMBER ',' NUMBER
+				| NUMBER ';' NUMBER
+				| '[' index ']' ';' NUMBER
+				| '[' index ']' ',' NUMBER
+				| NUMBER ';' '[' index ']' 
+				| NUMBER ',' '[' index ']'
+;
+
+expr : expr '+' term
 | term
 ;
 
-term : term '*' factor { $$ = $1 * $3; }
+term : term '*' factor
 | factor
+| factor '^' NUMBER
 ;
 
-factor : '(' expr ')' { $$ = $2; }
+factor : '(' expr ')'
 | NUMBER
+| var
 ;
+
+var :
+				NAME
+				| NAME '[' index ']' { $$ = $1; }
+;		

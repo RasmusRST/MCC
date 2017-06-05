@@ -11,7 +11,7 @@ To compile the syntax analysis with flex/yacc, run cygwin:
 ./make.sh
 ```
 
-To compile the compiler, run git bash (mingw) in the root:
+To compile the compiler, run git bash (mingw) in the project root:
 ```
 mkdir build
 cd build
