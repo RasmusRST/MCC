@@ -93,6 +93,12 @@ void printTree(TreeNode * tree)
 			case IdK:
 				printf("Id: %s\n", tree->attr.name);
 				break;
+			case IndexK:
+				printf("Index: [%d:%d,%d:%d,%d:%d]\n", tree->attr.index.l[0], tree->attr.index.r[0],
+													   tree->attr.index.l[1], tree->attr.index.r[1],
+													   tree->attr.index.l[2], tree->attr.index.r[2]
+													    );
+				break;
 			default:
 				printf("Unknown ExpNode kind\n");
 				break;
@@ -104,4 +110,13 @@ void printTree(TreeNode * tree)
 		tree = tree->sibling;
 	}
 	UNINDENT;
+}
+
+void setindexzero(Index *index)
+{
+	for (int i = 0; i < 3; i++)
+	{
+		index->l[i] = 0;
+		index->r[i] = 0;
+	}
 }

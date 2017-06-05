@@ -28,6 +28,8 @@ int yywrap()
 	char *string; // string values for constants
 	char *name;	 // name of function or variable
 	TreeNode * tree;
+	varHandler var;
+	Index index;
 }
 
 %token <ival> NUMBER
@@ -37,9 +39,9 @@ int yywrap()
 %token SCIENTIFICVAL
 %token EOL
 
-%type <name> var
+%type <var> var
 %type <tree> compstmt statement assignstmt expr term factor
-%type <ival> index
+%type <index> index
 
 %%
 
@@ -64,21 +66,20 @@ statement:
 				  ;
 
 assignstmt:       var '=' expr {
-					printf("There was an assignment of %s.\n",$1);
+					printf("There was an assignment of %s.\n",$1.name);
 					$$ = newStmtNode(AssignK);
 					$$->child[0] = $3;
-					$$->attr.name = $1;
+					$$->attr.name = $1.name;
 					}
 ;
 
 index:
-				  NUMBER
-				| NUMBER ',' NUMBER
-				| NUMBER ';' NUMBER
-				| '[' index ']' ';' NUMBER { $$ = 2; }
-				| '[' index ']' ',' NUMBER { $$ = 2; }
-				| NUMBER ';' '[' index ']' 
-				| NUMBER ',' '[' index ']'
+				  NUMBER { setindexzero(&$$); $$.l[0] = $1; }
+				| NUMBER ',' NUMBER { setindexzero(&$$); $$.l[0] = $1; $$.l[1] = $3; }
+				| NUMBER ':' NUMBER { setindexzero(&$$); $$.l[0] = $1; $$.r[0] = $3; }
+				| NUMBER ':' NUMBER ',' NUMBER { setindexzero(&$$); $$.l[0] = $1; $$.r[0] = $3; $$.l[1] = $5; }
+				| NUMBER ':' NUMBER ',' NUMBER ':' NUMBER { setindexzero(&$$); $$.l[0] = $1; $$.r[0] = $3; $$.l[1] = $5; $$.r[1] = $7; }
+				| NUMBER ',' NUMBER ':' NUMBER { setindexzero(&$$); $$.l[0] = $1; $$.l[1] = $3; $$.r[1] = $5; }
 ;
 
 expr : expr '+' term
@@ -94,12 +95,22 @@ factor : '(' expr ')'  {  }
 | NUMBER { $$ = newExpNode(ConstK);
 		   $$->attr.val = $1; }
 | var { $$ = newExpNode(IdK);
-        $$->attr.name = $1; }
+        $$->attr.name = $1.name;
+		/* if variable is indexed */
+		if ($1.node!=NULL)
+		{
+		$$->child[0] = $1.node;
+		}
+		}
 ;
 
 var :
-				  NAME
-				| NAME '[' index ']' {  }
+				  NAME { $$.name = $1; $$.node=NULL; }
+				| NAME '(' index ')' { 
+				$$.node = newExpNode(IndexK);
+				$$.name = $1;
+				$$.node->attr.index = $3;
+				}
 ;		
 
 %%

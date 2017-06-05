@@ -13,10 +13,18 @@ typedef enum
 
 typedef enum {StmtK,ExpK} NodeKind;
 typedef enum {IfK,RepeatK,AssignK,ReadK,WriteK} StmtKind;
-typedef enum {OpK,ConstK,IdK} ExpKind;
+typedef enum {OpK,ConstK,IdK,IndexK} ExpKind;
 
 /* ExpType is used for type checking */
 typedef enum {Void,Integer,Boolean} ExpType;
+
+// used to specify index of arrays
+typedef struct indexhandler
+{
+	// used like a(l[0]:r[0],l[1]:r[1],l[2]:r[2]) = zeros(l2-l1,r2-r1);
+	int l[3];
+	int r[3];
+} Index;
 
 #define MAXCHILDREN 3
 
@@ -28,8 +36,17 @@ typedef struct treeNode
      union { StmtKind stmt; ExpKind exp;} kind;
      union { TokenType op;
              int val;
-             char * name; } attr;
+             char * name;
+			 Index index;
+			} attr;
      ExpType type; /* for type checking of exps */
    } TreeNode;
+
+// used in parser to pass variable name and node
+typedef struct varhandler
+{
+	char *name;
+	TreeNode * node;
+} varHandler;
 
 #endif
