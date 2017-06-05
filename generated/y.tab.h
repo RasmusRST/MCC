@@ -64,14 +64,15 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 21 "yacc/mcc.y" /* yacc.c:1909  */
+#line 22 "yacc/mcc.y" /* yacc.c:1909  */
 
 	int ival; // integer values for constants
 	double dval; // double values for constants
 	char *string; // string values for constants
 	char *name;	 // name of function or variable
+	TreeNode * tree;
 
-#line 75 "generated/y.tab.h" /* yacc.c:1909  */
+#line 76 "generated/y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

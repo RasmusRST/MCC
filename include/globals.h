@@ -1,11 +1,13 @@
 #ifndef _GLOBALS_H_
 #define _GLOBALS_H_
 
+#include <stdlib.h>
 #include <stddef.h>
 
 typedef enum
 /* book-keeping tokens */
 {
+	test,test1
 } TokenType;
 
 typedef enum {StmtK,ExpK} NodeKind;

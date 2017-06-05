@@ -1,9 +1,11 @@
 
 
-#include<stdio.h>
-#include "y.tab.h"
+#include <stdio.h>
 #include "globals.h"
 #include "util.h"
+
+#include "y.tab.h"
+
 
 /* Used to pass a string to yacc */
 typedef struct yy_buffer_state * YY_BUFFER_STATE;
@@ -16,8 +18,7 @@ int main(){
 	printf("MATLAB to C compiler (MCC) 0.1\n");
 	printf("Copyright (C) 2017 Rasmus Steffensen\n");
 	printf("This is free software; There is NO warranty;\n");
-	printf("not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n");
-    
+	printf("not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"); 
 	
 	char string[] = "a=d[3,3]^2;";
     YY_BUFFER_STATE buffer = yy_scan_string(string);

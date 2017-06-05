@@ -455,10 +455,12 @@ char *yytext;
 #line 1 "lex/mcc.l"
 #line 2 "lex/mcc.l"
 #include <stdio.h>
+#include "globals.h"
+#include "util.h"
 #include "y.tab.h"
-#line 459 "generated/lex.yy.c"
-#define YY_NO_UNISTD_H 1
 #line 461 "generated/lex.yy.c"
+#define YY_NO_UNISTD_H 1
+#line 463 "generated/lex.yy.c"
 
 #define INITIAL 0
 
@@ -675,9 +677,9 @@ YY_DECL
 		}
 
 	{
-#line 8 "lex/mcc.l"
+#line 10 "lex/mcc.l"
 
-#line 680 "generated/lex.yy.c"
+#line 682 "generated/lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -736,41 +738,41 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 9 "lex/mcc.l"
+#line 11 "lex/mcc.l"
 return SCIENTIFICVAL;
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 10 "lex/mcc.l"
+#line 12 "lex/mcc.l"
 yylval.ival=atoi(yytext); return NUMBER;
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 11 "lex/mcc.l"
+#line 13 "lex/mcc.l"
 yylval.dval=atoi(yytext); return DECIMAL;
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 12 "lex/mcc.l"
+#line 14 "lex/mcc.l"
 yylval.name=strdup(yytext); return NAME;
 	YY_BREAK
 case 5:
 /* rule 5 can match eol */
 YY_RULE_SETUP
-#line 13 "lex/mcc.l"
+#line 15 "lex/mcc.l"
 /* ignore EOL */
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 14 "lex/mcc.l"
+#line 16 "lex/mcc.l"
 {return yytext[0];} // match all single characters
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 15 "lex/mcc.l"
+#line 17 "lex/mcc.l"
 ECHO;
 	YY_BREAK
-#line 773 "generated/lex.yy.c"
+#line 775 "generated/lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1773,6 +1775,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 15 "lex/mcc.l"
+#line 17 "lex/mcc.l"
 
 

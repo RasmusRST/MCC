@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "globals.h"
+#include "util.h"
 
 int yydebug=0;
 
@@ -23,6 +24,7 @@ int yywrap()
 	double dval; // double values for constants
 	char *string; // string values for constants
 	char *name;	 // name of function or variable
+	TreeNode * tree;
 }
 
 %token <ival> NUMBER
@@ -32,10 +34,11 @@ int yywrap()
 %token SCIENTIFICVAL
 
 %type <name> var
-
+%type <tree> compstmts statements assignstmt expr term factor
+%type <ival> index
 
 %%
-compstmts:        /*empty */
+compstmts:        /*empty */  {  }
                 | compstmts statements ';'
 				| compstmts statements
 				;
@@ -45,15 +48,15 @@ statements:
                   | assignstmt				  
 				  ;
 
-assignstmt:       var '=' expr { printf("There was an assignment of %s",$1); }
+assignstmt:       var '=' expr { printf("There was an assignment of %s",$1); $$ = newStmtNode(AssignK); }
 ;
 
 index:
 				  NUMBER
 				| NUMBER ',' NUMBER
 				| NUMBER ';' NUMBER
-				| '[' index ']' ';' NUMBER
-				| '[' index ']' ',' NUMBER
+				| '[' index ']' ';' NUMBER { $$ = 2; }
+				| '[' index ']' ',' NUMBER { $$ = 2; }
 				| NUMBER ';' '[' index ']' 
 				| NUMBER ',' '[' index ']'
 ;
@@ -64,15 +67,15 @@ expr : expr '+' term
 
 term : term '*' factor
 | factor
-| factor '^' NUMBER
+| factor '^' NUMBER { $$ = newStmtNode(AssignK); }
 ;
 
-factor : '(' expr ')'
-| NUMBER
-| var
+factor : '(' expr ')'  {  }
+| NUMBER { $$ = newStmtNode(AssignK); }
+| var { $$ = newStmtNode(AssignK); }
 ;
 
 var :
-				NAME
-				| NAME '[' index ']' { $$ = $1; }
+				  NAME
+				| NAME '[' index ']' {  }
 ;		

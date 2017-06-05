@@ -67,6 +67,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "globals.h"
+#include "util.h"
 
 int yydebug=0;
 
@@ -81,7 +82,7 @@ int yywrap()
 }
 
 
-#line 85 "generated/y.tab.c" /* yacc.c:339  */
+#line 86 "generated/y.tab.c" /* yacc.c:339  */
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus && 201103L <= __cplusplus
@@ -135,14 +136,15 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 21 "yacc/mcc.y" /* yacc.c:355  */
+#line 22 "yacc/mcc.y" /* yacc.c:355  */
 
 	int ival; // integer values for constants
 	double dval; // double values for constants
 	char *string; // string values for constants
 	char *name;	 // name of function or variable
+	TreeNode * tree;
 
-#line 146 "generated/y.tab.c" /* yacc.c:355  */
+#line 148 "generated/y.tab.c" /* yacc.c:355  */
 };
 
 typedef union YYSTYPE YYSTYPE;
@@ -159,7 +161,7 @@ int yyparse (void);
 
 /* Copy the second part of user declarations.  */
 
-#line 163 "generated/y.tab.c" /* yacc.c:358  */
+#line 165 "generated/y.tab.c" /* yacc.c:358  */
 
 #ifdef short
 # undef short
@@ -457,9 +459,9 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    38,    38,    39,    40,    44,    45,    48,    52,    53,
-      54,    55,    56,    57,    58,    61,    62,    65,    66,    67,
-      70,    71,    72,    76,    77
+       0,    41,    41,    42,    43,    47,    48,    51,    55,    56,
+      57,    58,    59,    60,    61,    64,    65,    68,    69,    70,
+      73,    74,    75,    79,    80
 };
 #endif
 
@@ -1251,20 +1253,62 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-        case 7:
-#line 48 "yacc/mcc.y" /* yacc.c:1646  */
-    { printf("There was an assignment of %s",(yyvsp[-2].name)); }
-#line 1258 "generated/y.tab.c" /* yacc.c:1646  */
+        case 2:
+#line 41 "yacc/mcc.y" /* yacc.c:1646  */
+    {  }
+#line 1260 "generated/y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 7:
+#line 51 "yacc/mcc.y" /* yacc.c:1646  */
+    { printf("There was an assignment of %s",(yyvsp[-2].name)); (yyval.tree) = newStmtNode(AssignK); }
+#line 1266 "generated/y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 11:
+#line 58 "yacc/mcc.y" /* yacc.c:1646  */
+    { (yyval.ival) = 2; }
+#line 1272 "generated/y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 12:
+#line 59 "yacc/mcc.y" /* yacc.c:1646  */
+    { (yyval.ival) = 2; }
+#line 1278 "generated/y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 19:
+#line 70 "yacc/mcc.y" /* yacc.c:1646  */
+    { (yyval.tree) = newStmtNode(AssignK); }
+#line 1284 "generated/y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 20:
+#line 73 "yacc/mcc.y" /* yacc.c:1646  */
+    {  }
+#line 1290 "generated/y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 21:
+#line 74 "yacc/mcc.y" /* yacc.c:1646  */
+    { (yyval.tree) = newStmtNode(AssignK); }
+#line 1296 "generated/y.tab.c" /* yacc.c:1646  */
+    break;
+
+  case 22:
+#line 75 "yacc/mcc.y" /* yacc.c:1646  */
+    { (yyval.tree) = newStmtNode(AssignK); }
+#line 1302 "generated/y.tab.c" /* yacc.c:1646  */
     break;
 
   case 24:
-#line 77 "yacc/mcc.y" /* yacc.c:1646  */
-    { (yyval.name) = (yyvsp[-3].name); }
-#line 1264 "generated/y.tab.c" /* yacc.c:1646  */
+#line 80 "yacc/mcc.y" /* yacc.c:1646  */
+    {  }
+#line 1308 "generated/y.tab.c" /* yacc.c:1646  */
     break;
 
 
-#line 1268 "generated/y.tab.c" /* yacc.c:1646  */
+#line 1312 "generated/y.tab.c" /* yacc.c:1646  */
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires

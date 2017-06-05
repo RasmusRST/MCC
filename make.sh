@@ -4,5 +4,5 @@
 set -x; # echo on
 yacc -d yacc/mcc.y -o generated/y.tab.c
 flex -o generated/lex.yy.c lex/mcc.l
-#gcc lex.yy.c y.tab.c ../src/mcc.c -Ibuild -o mcc
+gcc generated/lex.yy.c generated/y.tab.c src/util.c src/mcc.c -IInclude -Igenerated -o build/mcc_GNU
 #done

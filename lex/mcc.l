@@ -1,5 +1,7 @@
 %{
 #include <stdio.h>
+#include "globals.h"
+#include "util.h"
 #include "y.tab.h"
 %}
 
