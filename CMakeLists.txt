@@ -17,8 +17,15 @@ SET(HEADERS
   "include/util.h"
 )
 
+SET(PARSER
+  "lex/mcc.l"
+  "yacc/mcc.y"
+)
+
 source_group("Utilities" FILES ${SOURCES})
 
-add_executable(mcc "src/mcc.c" ${SOURCES} ${HEADERS})
+source_group("Parser" FILES ${PARSER})
+
+add_executable(mcc "src/mcc.c" ${SOURCES} ${HEADERS} ${PARSER})
 
 target_link_libraries(mcc LexYacc)

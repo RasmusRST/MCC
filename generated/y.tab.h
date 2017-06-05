@@ -49,7 +49,8 @@ extern int yydebug;
     WORD = 259,
     DECIMAL = 260,
     NAME = 261,
-    SCIENTIFICVAL = 262
+    SCIENTIFICVAL = 262,
+    EOL = 263
   };
 #endif
 /* Tokens.  */
@@ -58,13 +59,14 @@ extern int yydebug;
 #define DECIMAL 260
 #define NAME 261
 #define SCIENTIFICVAL 262
+#define EOL 263
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 
 union YYSTYPE
 {
-#line 22 "yacc/mcc.y" /* yacc.c:1909  */
+#line 25 "yacc/mcc.y" /* yacc.c:1909  */
 
 	int ival; // integer values for constants
 	double dval; // double values for constants
@@ -72,7 +74,7 @@ union YYSTYPE
 	char *name;	 // name of function or variable
 	TreeNode * tree;
 
-#line 76 "generated/y.tab.h" /* yacc.c:1909  */
+#line 78 "generated/y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

@@ -4,6 +4,9 @@
 #include "globals.h"
 #include "util.h"
 
+/* Used to access AST from the main file */
+TreeNode * savedTree; 
+
 int yydebug=0;
 
 void yyerror(const char *str)
@@ -32,23 +35,40 @@ int yywrap()
 %token <dval> DECIMAL
 %token <name> NAME
 %token SCIENTIFICVAL
+%token EOL
 
 %type <name> var
-%type <tree> compstmts statements assignstmt expr term factor
+%type <tree> compstmt statement assignstmt expr term factor
 %type <ival> index
 
 %%
-compstmts:        /*empty */  {  }
-                | compstmts statements ';'
-				| compstmts statements
+
+program     : compstmt
+                 { savedTree = $1;} 
+
+compstmt:        /*empty */  { $$ = NULL; }
+                | compstmt statement ';' {
+				TreeNode * t = $1;
+				   if (t != NULL)		  
+                   { while (t->sibling)
+                        t = t->sibling;
+                     t->sibling = $2;
+                     $$ = $1; }
+                     else $$ = $2;
+				}
 				;
 
-statements:
+statement:
 				  expr
                   | assignstmt				  
 				  ;
 
-assignstmt:       var '=' expr { printf("There was an assignment of %s",$1); $$ = newStmtNode(AssignK); }
+assignstmt:       var '=' expr {
+					printf("There was an assignment of %s.\n",$1);
+					$$ = newStmtNode(AssignK);
+					$$->child[0] = $3;
+					$$->attr.name = $1;
+					}
 ;
 
 index:
@@ -67,15 +87,19 @@ expr : expr '+' term
 
 term : term '*' factor
 | factor
-| factor '^' NUMBER { $$ = newStmtNode(AssignK); }
+| factor '^' NUMBER 
 ;
 
 factor : '(' expr ')'  {  }
-| NUMBER { $$ = newStmtNode(AssignK); }
-| var { $$ = newStmtNode(AssignK); }
+| NUMBER { $$ = newExpNode(ConstK);
+		   $$->attr.val = $1; }
+| var { $$ = newExpNode(IdK);
+        $$->attr.name = $1; }
 ;
 
 var :
 				  NAME
 				| NAME '[' index ']' {  }
 ;		
+
+%%

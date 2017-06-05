@@ -760,7 +760,7 @@ case 5:
 /* rule 5 can match eol */
 YY_RULE_SETUP
 #line 15 "lex/mcc.l"
-/* ignore EOL */
+return EOL;
 	YY_BREAK
 case 6:
 YY_RULE_SETUP

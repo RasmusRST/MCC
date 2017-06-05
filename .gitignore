@@ -25,6 +25,7 @@ bin/
 *.lst
 *.list
 *.d
+*.stackdump
 
 # vscode #
 ###################

@@ -6,6 +6,7 @@
 
 #include "y.tab.h"
 
+extern TreeNode * savedTree;
 
 /* Used to pass a string to yacc */
 typedef struct yy_buffer_state * YY_BUFFER_STATE;
@@ -20,9 +21,11 @@ int main(){
 	printf("This is free software; There is NO warranty;\n");
 	printf("not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"); 
 	
-	char string[] = "a=d[3,3]^2;";
+	char string[] = "a=3;k=4;c=a;";
     YY_BUFFER_STATE buffer = yy_scan_string(string);
     yyparse();
     yy_delete_buffer(buffer);
+	printf("\n\n AST:\n");
+	printTree(savedTree);
     return 0;
 }

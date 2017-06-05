@@ -30,3 +30,78 @@ TreeNode * newExpNode(ExpKind kind)
 		t->type = Void;
 	return t;
 }
+
+/* Variable indentno is used by printTree to
+* store current number of spaces to indent
+*/
+static int indentno = 0;
+
+/* macros to increase/decrease indentation */
+#define INDENT indentno+=2
+#define UNINDENT indentno-=2
+
+/* printSpaces indents by printing spaces */
+static void printSpaces(void)
+{
+	int i;
+	for (i = 0; i<indentno; i++)
+		printf(" ");
+}
+
+/* procedure printTree prints a syntax tree to the
+* listing file using indentation to indicate subtrees
+*/
+void printTree(TreeNode * tree)
+{
+	int i;
+	INDENT;
+	while (tree != NULL) {
+		printSpaces();
+		if (tree->nodekind == StmtK)
+		{
+			switch (tree->kind.stmt) {
+			case IfK:
+				printf( "If\n");
+				break;
+			case RepeatK:
+				printf("Repeat\n");
+				break;
+			case AssignK:
+				printf("Assign to: %s\n", tree->attr.name);
+				break;
+			case ReadK:
+				printf("Read: %s\n", tree->attr.name);
+				break;
+			case WriteK:
+				printf("Write\n");
+				break;
+			default:
+				printf("Unknown ExpNode kind\n");
+				break;
+			}
+		}
+		else if (tree->nodekind == ExpK)
+		{
+			switch (tree->kind.exp) {
+			case OpK:
+				printf("Op: ");
+				//printToken(tree->attr.op, "\0");
+				break;
+			case ConstK:
+				printf("Const: %d\n", tree->attr.val);
+				break;
+			case IdK:
+				printf("Id: %s\n", tree->attr.name);
+				break;
+			default:
+				printf("Unknown ExpNode kind\n");
+				break;
+			}
+		}
+		else printf("Unknown node kind\n");
+		for (i = 0; i<MAXCHILDREN; i++)
+			printTree(tree->child[i]);
+		tree = tree->sibling;
+	}
+	UNINDENT;
+}
