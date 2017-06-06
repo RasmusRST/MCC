@@ -72,8 +72,8 @@ BucketList st_lookup(char * name)
 void printSymTab()
 {
 	int i;
-	printf("Variable Name  Location\n");
-	printf("-------------  --------\n");
+	printf("Variable Name  Location  Array Size\n");
+	printf("-------------  --------  ----------\n");
 	for (i = 0; i<SIZE; ++i)
 	{
 		if (hashTable[i] != NULL)

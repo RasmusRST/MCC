@@ -12,6 +12,8 @@ SET(SOURCES
   "src/util.c"
   "src/analyze.c"
   "src/symtab.c"
+  "src/cgen.c"
+  "src/code.c"
 )
 
 SET(HEADERS
@@ -19,6 +21,8 @@ SET(HEADERS
   "include/util.h"
   "include/analyze.h"
   "include/symtab.h"
+  "include/cgen.h"
+  "include/code.h"  
 )
 
 SET(PARSER

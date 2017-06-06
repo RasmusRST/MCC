@@ -31,5 +31,9 @@ int main(){
 	buildSymtab(savedTree);
 	printf("\nSymbol table:\n\n");
 	printSymTab();
+	printf("\n\n");
+
+	codeGen(savedTree, "test.c");
+
     return 0;
 }
