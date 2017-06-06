@@ -25,7 +25,11 @@ int main(){
     YY_BUFFER_STATE buffer = yy_scan_string(string);
     yyparse();
     yy_delete_buffer(buffer);
-	printf("\n\n AST:\n");
+	printf("AST:\n");
 	printTree(savedTree);
+	
+	buildSymtab(savedTree);
+	printf("\nSymbol table:\n\n");
+	printSymTab();
     return 0;
 }

@@ -1282,10 +1282,10 @@ yyreduce:
   case 7:
 #line 68 "yacc/mcc.y" /* yacc.c:1646  */
     {
-					printf("There was an assignment of %s.\n",(yyvsp[-2].var).name);
 					(yyval.tree) = newStmtNode(AssignK);
 					(yyval.tree)->child[0] = (yyvsp[0].tree);
 					(yyval.tree)->attr.name = (yyvsp[-2].var).name;
+					(yyval.tree)->index = (yyvsp[-2].var).index;
 					}
 #line 1291 "generated/y.tab.c" /* yacc.c:1646  */
     break;

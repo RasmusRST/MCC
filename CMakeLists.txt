@@ -10,11 +10,15 @@ INCLUDE_DIRECTORIES("generated/")
 
 SET(SOURCES
   "src/util.c"
+  "src/analyze.c"
+  "src/symtab.c"
 )
 
 SET(HEADERS
   "include/globals.h"
   "include/util.h"
+  "include/analyze.h"
+  "include/symtab.h"
 )
 
 SET(PARSER

@@ -66,10 +66,10 @@ statement:
 				  ;
 
 assignstmt:       var '=' expr {
-					printf("There was an assignment of %s.\n",$1.name);
 					$$ = newStmtNode(AssignK);
 					$$->child[0] = $3;
 					$$->attr.name = $1.name;
+					$$->index = $1.index;
 					}
 ;
 
