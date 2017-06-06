@@ -83,12 +83,29 @@ index:
 ;
 
 expr : expr '+' term
-| term
+                 { $$ = newExpNode(OpK);
+                   $$->child[0] = $1;
+                   $$->child[1] = $3;
+                   $$->attr.op = "+";
+                 }
+| term          { $$ = $1; }
 ;
 
 term : term '*' factor
-| factor
-| factor '^' NUMBER 
+		{
+		        $$ = newExpNode(OpK);
+                $$->child[0] = $1;
+                $$->child[1] = $3;
+                $$->attr.op = "*";
+		}
+| factor  { $$ = $1; }
+| factor '^' factor
+		{
+		        $$ = newExpNode(OpK);
+                $$->child[0] = $1;
+                $$->child[1] = $3;
+                $$->attr.op = "^";
+		}
 ;
 
 factor : '(' expr ')'  {  }
@@ -96,20 +113,15 @@ factor : '(' expr ')'  {  }
 		   $$->attr.val = $1; }
 | var { $$ = newExpNode(IdK);
         $$->attr.name = $1.name;
-		/* if variable is indexed */
-		if ($1.node!=NULL)
-		{
-		$$->child[0] = $1.node;
-		}
+		$$->index = $1.index;	
 		}
 ;
 
 var :
-				  NAME { $$.name = $1; $$.node=NULL; }
+				  NAME { $$.name = $1; setindexzero(&$$.index); }
 				| NAME '(' index ')' { 
-				$$.node = newExpNode(IndexK);
 				$$.name = $1;
-				$$.node->attr.index = $3;
+				$$.index = $3;
 				}
 ;		
 

@@ -48,6 +48,25 @@ static void printSpaces(void)
 		printf(" ");
 }
 
+/* printindex printing index nicely */
+static void printIndex(Index index)
+{
+	if (index.l[0])
+		printf("[%d", index.l[0]);
+	if (index.r[0])
+		printf(":%d", index.r[0]);
+	if (index.l[1])
+		printf(",%d", index.l[1]);
+	if (index.r[1])
+		printf(":%d", index.r[1]);
+
+	if (index.l[0])
+		printf("]");
+
+	printf("\n");
+}
+
+
 /* procedure printTree prints a syntax tree to the
 * listing file using indentation to indicate subtrees
 */
@@ -67,7 +86,8 @@ void printTree(TreeNode * tree)
 				printf("Repeat\n");
 				break;
 			case AssignK:
-				printf("Assign to: %s\n", tree->attr.name);
+				printf("Assign to: %s", tree->attr.name);
+				printIndex(tree->index);
 				break;
 			case ReadK:
 				printf("Read: %s\n", tree->attr.name);
@@ -84,20 +104,14 @@ void printTree(TreeNode * tree)
 		{
 			switch (tree->kind.exp) {
 			case OpK:
-				printf("Op: ");
-				//printToken(tree->attr.op, "\0");
+				printf("Op: %s\n", tree->attr.op);
 				break;
 			case ConstK:
 				printf("Const: %d\n", tree->attr.val);
 				break;
 			case IdK:
-				printf("Id: %s\n", tree->attr.name);
-				break;
-			case IndexK:
-				printf("Index: [%d:%d,%d:%d,%d:%d]\n", tree->attr.index.l[0], tree->attr.index.r[0],
-													   tree->attr.index.l[1], tree->attr.index.r[1],
-													   tree->attr.index.l[2], tree->attr.index.r[2]
-													    );
+				printf("Id: %s", tree->attr.name);
+				printIndex(tree->index);
 				break;
 			default:
 				printf("Unknown ExpNode kind\n");

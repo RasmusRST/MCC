@@ -21,7 +21,7 @@ int main(){
 	printf("This is free software; There is NO warranty;\n");
 	printf("not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"); 
 	
-	char string[] = "adf=3;k=4;c=a(7,1:5);kast=beg(3:6);kk=c+b;";
+	char string[] = "adf(12)=3+5;k=4;c=a(7,1:5)^c(3);kast=beg(3:6);kk=c+b;";
     YY_BUFFER_STATE buffer = yy_scan_string(string);
     yyparse();
     yy_delete_buffer(buffer);

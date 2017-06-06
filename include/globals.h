@@ -5,15 +5,9 @@
 #include <stdlib.h>
 #include <stddef.h>
 
-typedef enum
-/* book-keeping tokens */
-{
-	test,test1
-} TokenType;
-
 typedef enum {StmtK,ExpK} NodeKind;
 typedef enum {IfK,RepeatK,AssignK,ReadK,WriteK} StmtKind;
-typedef enum {OpK,ConstK,IdK,IndexK} ExpKind;
+typedef enum {OpK,ConstK,IdK} ExpKind;
 
 /* ExpType is used for type checking */
 typedef enum {Void,Integer,Boolean} ExpType;
@@ -34,19 +28,19 @@ typedef struct treeNode
      int lineno;
      NodeKind nodekind;
      union { StmtKind stmt; ExpKind exp;} kind;
-     union { TokenType op;
+     union { char *op;
              int val;
              char * name;
-			 Index index;
 			} attr;
-     ExpType type; /* for type checking of exps */
+	 Index index;
+	 ExpType type; /* for type checking of exps */
    } TreeNode;
 
 // used in parser to pass variable name and node
 typedef struct varhandler
 {
 	char *name;
-	TreeNode * node;
+	Index index;
 } varHandler;
 
 #endif
