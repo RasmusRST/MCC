@@ -4,6 +4,8 @@
 #include "globals.h"
 #include "util.h"
 
+extern FILE *yyin;
+
 /* Used to access AST from the main file */
 TreeNode * savedTree; 
 

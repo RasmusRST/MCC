@@ -14,17 +14,36 @@ extern int yyparse();
 extern YY_BUFFER_STATE yy_scan_string(char * str);
 extern void yy_delete_buffer(YY_BUFFER_STATE buffer);
 
-int main(){
+/* allocate global variables */
+int lineno = 0;
+FILE *yyin; /* File to yacc / lex */
+FILE * code; /* C output code */
+
+
+int main(int argc, char * argv[]){
 	/* Print copyrights */
 	printf("MATLAB to C compiler (MCC) 0.1\n");
 	printf("Copyright (C) 2017 Rasmus Steffensen\n");
 	printf("This is free software; There is NO warranty;\n");
 	printf("not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n\n"); 
 	
-	char string[] = "adf(12)=3+5;k=4;c=a(7,1:5)^c(3);kast=beg(3:6);kk=c+b;";
-    YY_BUFFER_STATE buffer = yy_scan_string(string);
-    yyparse();
-    yy_delete_buffer(buffer);
+	char pgm[120]; /* source code file name */
+	if (argc != 2)
+	{
+		fprintf(stderr, "usage: %s <filename>\n", argv[0]);
+		exit(1);
+	}
+	strcpy(pgm, argv[1]);
+	yyin = fopen(pgm, "r");
+	if (yyin == NULL)
+	{
+		fprintf(stderr, "File %s not found\n", pgm);
+		exit(1);
+	}
+
+	//yylex();
+	yyparse();
+    
 	printf("AST:\n");
 	printTree(savedTree);
 	

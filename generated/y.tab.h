@@ -66,7 +66,7 @@ extern int yydebug;
 
 union YYSTYPE
 {
-#line 25 "yacc/mcc.y" /* yacc.c:1909  */
+#line 27 "yacc/mcc.y" /* yacc.c:1909  */
 
 	int ival; // integer values for constants
 	double dval; // double values for constants
