@@ -44,14 +44,15 @@ static void genStmt(TreeNode * tree)
 	int loc;
 	switch (tree->kind.stmt) {
 	case AssignK:
-		emitComment("assign statement");
-		/* generate code for rhs */
 		cGen(tree->child[0]);
-		//cGen(tree->child[1]);
+		emitCode(" = ");
+		/* generate code for rhs */		
+		cGen(tree->child[1]);
+		emitCode(";\n");
 		/* now store value */
-		loc = st_lookup(tree->child[0]->attr.name);
-		printf("location: %d", loc);
-		emitComment("<- assign");
+		//loc = st_lookup(tree->child[0]->attr.name);
+		//printf("location: %d", loc);
+		//emitComment("<- assign");
 		break; /* assign_k */
 	default:
 		break;
@@ -126,9 +127,15 @@ static void genExp(TreeNode * tree)
 			{
 				//emitCode(".block<%s-1,%s-1>(%s-%s+1,%s-%s+1)", idx1->lb);
 			}
-			if (i2 != NULL && i4 != NULL) /* (x:x,x:x) */
-			{
-				emitCode(".block<%s-1,%s-1>(%s-%s+1,%s-%s+1)", idx1->lb, idx2->lb, idx1->rb, idx1->lb, idx2->rb, idx2->lb);
+			if (i2 != NULL && i4 != NULL)
+			{  /* (x:x,x:x) */
+				/* Collect which values to caluclate and which to substitute */
+				if (i1->kind.exp == ConstK && i2->kind.exp == ConstK &&
+					i3->kind.exp == ConstK && i4->kind.exp == ConstK)
+					emitCode(".block<%d,%d>(%d,%d)", i1->attr.val-1, i3->attr.val - 1, i2->attr.val - i1->attr.val + 1, i4->attr.val - i3->attr.val + 1);
+				if (i1->kind.exp == IdK && i2->kind.exp == IdK &&
+					i3->kind.exp == IdK && i4->kind.exp == IdK)
+					emitCode(".block<%s-1,%s-1>(%s-%s+1,%s-%s+1)", idx1->lb, idx2->lb, idx1->rb, idx1->lb, idx2->rb, idx2->lb);
 			}
 		}
 	}

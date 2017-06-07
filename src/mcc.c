@@ -60,7 +60,7 @@ int main(int argc, char * argv[]){
 	printSymTab();
 	printf("\n\n");
 
-	codeGen(savedTree, "test.c");
+	codeGen(savedTree, outCode);
 
     return 0;
 }
