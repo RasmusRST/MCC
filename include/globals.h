@@ -10,18 +10,10 @@ extern FILE* outCode; /* C output code */
 
 typedef enum {StmtK,ExpK} NodeKind;
 typedef enum {IfK,RepeatK,AssignK,ReadK,WriteK} StmtKind;
-typedef enum {OpK,ConstK,IdK} ExpKind;
+typedef enum {OpK,ConstK,IdK,IndexK} ExpKind;
 
 /* ExpType is used for type checking */
 typedef enum {Void,Integer,Boolean} ExpType;
-
-// used to specify index of arrays
-typedef struct indexhandler
-{
-	// used like a(l[0]:r[0],l[1]:r[1],l[2]:r[2]) = zeros(l2-l1,r2-r1);
-	int l[3];
-	int r[3];
-} Index;
 
 #define MAXCHILDREN 3
 
@@ -35,15 +27,10 @@ typedef struct treeNode
              int val;
              char * name;
 			} attr;
-	 Index index;
+	 int indexed;
+	 char *lb;
+	 char *rb;
 	 ExpType type; /* for type checking of exps */
    } TreeNode;
-
-// used in parser to pass variable name and node
-typedef struct varhandler
-{
-	char *name;
-	Index index;
-} varHandler;
 
 #endif

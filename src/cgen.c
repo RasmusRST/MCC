@@ -5,6 +5,12 @@
 #include "code.h"
 #include "cgen.h"
 
+/* These are used to overide prints to code file
+ and instead print to intermediate buffer. This is
+ smart if something needs not to be output right away. */
+char cmdBuffer[200];
+int codeBuffer = 0;
+
 /* prototype for internal recursive code generator */
 static void cGen(TreeNode * tree);
 
@@ -39,10 +45,11 @@ static void genStmt(TreeNode * tree)
 	switch (tree->kind.stmt) {
 	case AssignK:
 		emitComment("-> assign");
+		emitCode("test");
 		/* generate code for rhs */
 		cGen(tree->child[0]);
 		/* now store value */
-		loc = st_lookup(tree->attr.name);
+		loc = st_lookup(tree->child[0]->attr.name);
 		printf("location: %d", loc);
 		emitComment("<- assign");
 		break; /* assign_k */

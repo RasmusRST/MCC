@@ -766,7 +766,7 @@ case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
 #line 16 "lex/mcc.l"
-;
+; /* windows line endings */
 	YY_BREAK
 case 7:
 YY_RULE_SETUP

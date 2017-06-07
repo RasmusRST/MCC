@@ -30,8 +30,6 @@ int yywrap()
 	char *string; // string values for constants
 	char *name;	 // name of function or variable
 	TreeNode * tree;
-	varHandler var;
-	Index index;
 }
 
 %token <ival> NUMBER
@@ -41,9 +39,7 @@ int yywrap()
 %token SCIENTIFICVAL
 %token EOL
 
-%type <var> var
-%type <tree> compstmt statement assignstmt expr term factor
-%type <index> index
+%type <tree> compstmt statement assignstmt expr term factor var index
 
 %%
 
@@ -69,19 +65,14 @@ statement:
 
 assignstmt:       var '=' expr {
 					$$ = newStmtNode(AssignK);
-					$$->child[0] = $3;
-					$$->attr.name = $1.name;
-					$$->index = $1.index;
+					$$->child[0] = $1;
+					$$->child[1] = $3;
 					}
 ;
 
 index:
-				  NUMBER { setindexzero(&$$); $$.l[0] = $1; }
-				| NUMBER ',' NUMBER { setindexzero(&$$); $$.l[0] = $1; $$.l[1] = $3; }
-				| NUMBER ':' NUMBER { setindexzero(&$$); $$.l[0] = $1; $$.r[0] = $3; }
-				| NUMBER ':' NUMBER ',' NUMBER { setindexzero(&$$); $$.l[0] = $1; $$.r[0] = $3; $$.l[1] = $5; }
-				| NUMBER ':' NUMBER ',' NUMBER ':' NUMBER { setindexzero(&$$); $$.l[0] = $1; $$.r[0] = $3; $$.l[1] = $5; $$.r[1] = $7; }
-				| NUMBER ',' NUMBER ':' NUMBER { setindexzero(&$$); $$.l[0] = $1; $$.l[1] = $3; $$.r[1] = $5; }
+				  expr { $$ = newExpNode(IndexK); $$->child[0] = $1; }
+				| expr ':' expr { $$ = newExpNode(IndexK); $$->child[0] = $1; $$->child[1] = $3; }
 ;
 
 expr : expr '+' term
@@ -110,20 +101,29 @@ term : term '*' factor
 		}
 ;
 
-factor : '(' expr ')'  {  }
+factor : '(' expr ')'  { $$ = $2; }
 | NUMBER { $$ = newExpNode(ConstK);
 		   $$->attr.val = $1; }
-| var { $$ = newExpNode(IdK);
-        $$->attr.name = $1.name;
-		$$->index = $1.index;	
-		}
+| var 
 ;
 
 var :
-				  NAME { $$.name = $1; setindexzero(&$$.index); }
+				  NAME {
+				$$ = newExpNode(IdK);
+				$$->attr.name = $1;
+				  }
 				| NAME '(' index ')' { 
-				$$.name = $1;
-				$$.index = $3;
+				$$ = newExpNode(IdK);
+				$$->attr.name = $1;
+				$$->child[0] = $3;
+				$$->indexed = 1;
+				}
+				| NAME '(' index ',' index ')' { 
+				$$ = newExpNode(IdK);
+				$$->attr.name = $1;
+				$$->child[0] = $3;
+				$$->child[1] = $5;
+				$$->indexed = 2;
 				}
 ;		
 

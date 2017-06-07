@@ -49,21 +49,8 @@ static void printSpaces(void)
 }
 
 /* printindex printing index nicely */
-static void printIndex(Index index)
+static void printIndex()
 {
-	if (index.l[0])
-		printf("[%d", index.l[0]);
-	if (index.r[0])
-		printf(":%d", index.r[0]);
-	if (index.l[1])
-		printf(",%d", index.l[1]);
-	if (index.r[1])
-		printf(":%d", index.r[1]);
-
-	if (index.l[0])
-		printf("]");
-
-	printf("\n");
 }
 
 /* procedure printTree prints a syntax tree to the
@@ -85,11 +72,10 @@ void printTree(TreeNode * tree)
 				printf("Repeat\n");
 				break;
 			case AssignK:
-				printf("Assign to: %s", tree->attr.name);
-				printIndex(tree->index);
+				printf("Assign to: %s\n", "");
 				break;
 			case ReadK:
-				printf("Read: %s\n", tree->attr.name);
+				printf("Read: %s\n", "");
 				break;
 			case WriteK:
 				printf("Write\n");
@@ -109,8 +95,10 @@ void printTree(TreeNode * tree)
 				printf("Const: %d\n", tree->attr.val);
 				break;
 			case IdK:
-				printf("Id: %s", tree->attr.name);
-				printIndex(tree->index);
+				printf("Id: %s\n", tree->attr.name);
+				break;
+			case IndexK:
+				printf("Index:\n", tree->attr.name);
 				break;
 			default:
 				printf("Unknown ExpNode kind\n");
@@ -123,13 +111,4 @@ void printTree(TreeNode * tree)
 		tree = tree->sibling;
 	}
 	UNINDENT;
-}
-
-void setindexzero(Index *index)
-{
-	for (int i = 0; i < 3; i++)
-	{
-		index->l[i] = 0;
-		index->r[i] = 0;
-	}
 }

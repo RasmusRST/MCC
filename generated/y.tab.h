@@ -73,10 +73,8 @@ union YYSTYPE
 	char *string; // string values for constants
 	char *name;	 // name of function or variable
 	TreeNode * tree;
-	varHandler var;
-	Index index;
 
-#line 80 "generated/y.tab.h" /* yacc.c:1909  */
+#line 78 "generated/y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

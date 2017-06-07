@@ -1,5 +1,5 @@
 /* analyze.c: Functions for analyzing an abstract syntax tree */
- 
+
 #include "globals.h"
 #include "symtab.h"
 #include "analyze.h"
@@ -46,6 +46,15 @@ static void insertNode(TreeNode * t)
 		switch (t->kind.stmt)
 		{
 		case AssignK:
+			break;
+		default:
+			break;
+		}
+		break;
+	case ExpK:
+		switch (t->kind.exp)
+		{
+		case IdK:
 			if (st_lookup(t->attr.name) == -1)
 				/* not yet in table, so treat as new definition */
 				st_insert(t->attr.name, 10);
@@ -53,6 +62,7 @@ static void insertNode(TreeNode * t)
 		default:
 			break;
 		}
+		break;
 	default:
 		break;
 	}

@@ -1,4 +1,4 @@
-a(2)=34;agf=dgf(2,3);testvar=34;
+a(2)=34;agf=dgf(1:2,3:4);testvar=(i);
 
 
 thisisatestvar=yesiyis;
