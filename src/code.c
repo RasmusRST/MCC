@@ -3,7 +3,7 @@
 
 extern FILE *outCode;
 
-extern char cmdBuffer[200];
+extern char *cmdBuffer;
 extern int codeBuffer;
 
 void emitComment(char * c)
@@ -12,10 +12,15 @@ void emitComment(char * c)
 	printf("* %s\n", c);
 }
 
-void emitCode(char * c)
+void emitCode(const char* format, ...)
 {
+	va_list args;
+	va_start(args, format);
+
 	if (!codeBuffer)
-	fprintf(outCode, "%s", c); /* print to code file */
+	vfprintf(outCode, format, args);  /* print to code file */
 	else
-	sprintf(cmdBuffer, "%s", c); /* print to intermediate buffer */
+	vsprintf(cmdBuffer, format, args); /* print to intermediate buffer */
+
+	va_end(args);
 }

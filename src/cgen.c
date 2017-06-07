@@ -8,7 +8,7 @@
 /* These are used to overide prints to code file
  and instead print to intermediate buffer. This is
  smart if something needs not to be output right away. */
-char cmdBuffer[200];
+char *cmdBuffer;
 int codeBuffer = 0;
 
 /* prototype for internal recursive code generator */
@@ -44,10 +44,10 @@ static void genStmt(TreeNode * tree)
 	int loc;
 	switch (tree->kind.stmt) {
 	case AssignK:
-		emitComment("-> assign");
-		emitCode("test");
+		emitComment("assign statement");
 		/* generate code for rhs */
 		cGen(tree->child[0]);
+		//cGen(tree->child[1]);
 		/* now store value */
 		loc = st_lookup(tree->child[0]->attr.name);
 		printf("location: %d", loc);
@@ -62,18 +62,88 @@ static void genStmt(TreeNode * tree)
 static void genExp(TreeNode * tree)
 {
 	int loc;
+
 	TreeNode * p1, *p2;
 	switch (tree->kind.exp) {
 
 	case ConstK:
-		emitComment("-> Const");
-		printf("Constant value: %d", tree->attr.val);
-		emitComment("<- Const");
+		emitCode("%d", tree->attr.val);
 		break; /* ConstK */
 
 	case IdK:
-		break; /* IdK */
+	{
+		TreeNode *i1, *i2, *i3, *i4, *idx1, *idx2 = NULL;
+		idx1 = tree->child[0];
+		idx2 = tree->child[1];
+		/* Names to help nicefy code look */
+		if (idx1 != NULL)
+		{
+			i1 = idx1->child[0]; /* (x:.,.:.) */
+			i2 = idx1->child[1]; /* (.:x,.:.) */
+		}
+		if (idx2 != NULL)
+		{
+			i3 = idx2->child[0]; /* (.:.,x:.) */
+			i4 = idx2->child[1]; /* (.:.,.:x) */
+		}
 
+		if (idx1 == NULL)
+		{ /* Not indexed */
+			emitCode("%s", tree->attr.name);
+		}
+		else
+		{ /* Indexed */
+			/* Issue here is to handle indices correctly. */
+
+			// turn on code to buffers.
+			char *codeBuffer_old = codeBuffer;
+			char *cmdBuffer_old = cmdBuffer;
+			codeBuffer = 1;
+
+			// Get code for indices
+			idx1->lb = (char *)malloc(sizeof(char) * 50);
+			idx1->rb = (char *)malloc(sizeof(char) * 50);
+			cGen(idx1);
+
+			if (idx2 != NULL)
+			{ /* there is also a rhs (.,x) */
+				idx2->lb = (char *)malloc(sizeof(char) * 50);
+				idx2->rb = (char *)malloc(sizeof(char) * 50);
+				cGen(idx2);
+			}
+
+			codeBuffer = codeBuffer_old;
+			cmdBuffer = cmdBuffer_old;
+
+			emitCode(tree->attr.name);
+
+			/* four cases of how many indices there is */
+			if (i2 == NULL && i3 == NULL) /* (x) */
+			{
+				emitCode("(%s)", idx1->lb);
+			}
+			if (i2 != NULL && i3 == NULL) /* (x:x) */
+			{
+				//emitCode(".block<%s-1,%s-1>(%s-%s+1,%s-%s+1)", idx1->lb);
+			}
+			if (i2 != NULL && i4 != NULL) /* (x:x,x:x) */
+			{
+				emitCode(".block<%s-1,%s-1>(%s-%s+1,%s-%s+1)", idx1->lb, idx2->lb, idx1->rb, idx1->lb, idx2->rb, idx2->lb);
+			}
+		}
+	}
+	break; /* IdK */
+	case IndexK:
+	{
+		cmdBuffer = tree->lb;
+		cGen(tree->child[0]);
+		if (tree->child[1] != NULL)
+		{
+			cmdBuffer = tree->rb;
+			cGen(tree->child[1]);
+		}
+	}
+	break;
 	case OpK:
 		p1 = tree->child[0];
 		p2 = tree->child[1];

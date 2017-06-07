@@ -1,4 +1,2 @@
-a(2)=34;agf=dgf(1:2,3:4);testvar=(i);
-
-
-thisisatestvar=yesiyis;
+ast=2;
+b(1:2,3:4)=27;
