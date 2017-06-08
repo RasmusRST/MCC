@@ -363,8 +363,8 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[25] =
     {   0,
-        0,    0,   10,    8,    5,    8,    6,    8,    2,    4,
-        7,    0,    0,    2,    0,    0,    4,    0,    3,    0,
+        0,    0,   10,    8,    5,    8,    7,    8,    2,    4,
+        6,    0,    0,    2,    0,    0,    4,    0,    3,    0,
         1,    0,    0,    0
     } ;
 
@@ -453,14 +453,19 @@ int yy_flex_debug = 0;
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
 #line 1 "lex/mcc.l"
-#line 2 "lex/mcc.l"
-#include <stdio.h>
+/* This file is a part of the MATLAB to C++ compiler
+   Developped by Rasmus Steffensen, May 2017.
+*/
+#line 6 "lex/mcc.l"
 #include "globals.h"
 #include "util.h"
 #include "y.tab.h"
-#line 461 "generated/lex.yy.c"
+
+extern int isatty(int);
+
+#line 466 "generated/lex.yy.c"
 #define YY_NO_UNISTD_H 1
-#line 463 "generated/lex.yy.c"
+#line 468 "generated/lex.yy.c"
 
 #define INITIAL 0
 
@@ -677,9 +682,9 @@ YY_DECL
 		}
 
 	{
-#line 10 "lex/mcc.l"
+#line 16 "lex/mcc.l"
 
-#line 682 "generated/lex.yy.c"
+#line 687 "generated/lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -738,52 +743,52 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 11 "lex/mcc.l"
+#line 17 "lex/mcc.l"
 return SCIENTIFICVAL;
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 12 "lex/mcc.l"
+#line 18 "lex/mcc.l"
 yylval.ival=atoi(yytext); return NUMBER;
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 13 "lex/mcc.l"
+#line 19 "lex/mcc.l"
 yylval.dval=atoi(yytext); return DECIMAL;
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 14 "lex/mcc.l"
+#line 20 "lex/mcc.l"
 yylval.name=strdup(yytext); return NAME;
 	YY_BREAK
 case 5:
 /* rule 5 can match eol */
 YY_RULE_SETUP
-#line 15 "lex/mcc.l"
-;
+#line 21 "lex/mcc.l"
+; /* ignore EOL */
 	YY_BREAK
 case 6:
+/* rule 6 can match eol */
 YY_RULE_SETUP
-#line 16 "lex/mcc.l"
-;
+#line 22 "lex/mcc.l"
+; /* windows line endings */
 	YY_BREAK
 case 7:
-/* rule 7 can match eol */
 YY_RULE_SETUP
-#line 17 "lex/mcc.l"
-; /* windows line endings */
+#line 23 "lex/mcc.l"
+; /* ignore white spaces */
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 18 "lex/mcc.l"
+#line 24 "lex/mcc.l"
 {return yytext[0];} // match all single characters
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 19 "lex/mcc.l"
+#line 25 "lex/mcc.l"
 ECHO;
 	YY_BREAK
-#line 786 "generated/lex.yy.c"
+#line 791 "generated/lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1786,6 +1791,6 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 19 "lex/mcc.l"
+#line 25 "lex/mcc.l"
 
 

@@ -36,7 +36,7 @@ static void nullProc(TreeNode * t)
 }
 
 /* Procedure insertNode inserts identifiers stored in t into
-* the symbol table
+* the symbol table.
 */
 static void insertNode(TreeNode * t)
 {
@@ -55,7 +55,7 @@ static void insertNode(TreeNode * t)
 		switch (t->kind.exp)
 		{
 		case IdK:
-			if (st_lookup(t->attr.name) == -1)
+			if (st_lookup(t->attr.name) == (BucketList)-1)
 				/* not yet in table, so treat as new definition */
 				st_insert(t->attr.name, 10, NULL, NULL);
 			break;

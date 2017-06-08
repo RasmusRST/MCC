@@ -5,13 +5,14 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <stddef.h>
+#include <string.h>
 
 extern FILE* source; /* source code text file */
 extern FILE* outCode; /* C output code */
 
 typedef enum {StmtK,ExpK} NodeKind;
 typedef enum {IfK,RepeatK,AssignK,ReadK,WriteK} StmtKind;
-typedef enum {OpK,ConstK,IdK,IndexK,IndexAllK} ExpKind;
+typedef enum {OpK,ConstK,IdK,IndexK,IndexAllK, ArrayK} ExpKind;
 
 /* ExpType is used for type checking */
 typedef enum {Void,Integer,Boolean} ExpType;

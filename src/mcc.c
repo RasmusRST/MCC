@@ -4,6 +4,8 @@
 #include "globals.h"
 #include "util.h"
 #include "symtab.h"
+#include "analyze.h"
+#include "cgen.h"
 
 #include "y.tab.h"
 

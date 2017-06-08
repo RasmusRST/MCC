@@ -1,10 +1,13 @@
+/* This file is a part of the MATLAB to C++ compiler
+   Developped by Rasmus Steffensen, May 2017.
+*/
+
 %{
-#include <stdio.h>
-#include <string.h>
 #include "globals.h"
 #include "util.h"
 
 extern FILE *yyin;
+extern int yylex(void);
 
 /* Used to access AST from the main file */
 TreeNode * savedTree; 
@@ -39,97 +42,113 @@ int yywrap()
 %token SCIENTIFICVAL
 %token EOL
 
-%type <tree> compstmt statement assignstmt expr term factor var index iexpr
+%type <tree> compstmt statement assignstmt expr term factor var index iexpr /* array array_inner */
 
 %%
 
-program     : compstmt
-                 { savedTree = $1;} 
+program: 
+	  compstmt { savedTree = $1; } 
 
-compstmt:        /*empty */  { $$ = NULL; }
-                | compstmt statement ';' {
-				TreeNode * t = $1;
-				   if (t != NULL)		  
-                   { while (t->sibling)
-                        t = t->sibling;
-                     t->sibling = $2;
-                     $$ = $1; }
-                     else $$ = $2;
-				}
-				;
+compstmt:
+      /*empty */  { $$ = NULL; }
+    | compstmt statement ';' {
+		TreeNode * t = $1;
+	    if (t != NULL)		  
+        {
+        	while (t->sibling)
+        	t = t->sibling;
+        	t->sibling = $2;
+        	$$ = $1;
+        }
+        else $$ = $2;
+		}
+;
 
 statement:
-				  expr
-                  | assignstmt				  
-				  ;
+	  expr
+    | assignstmt				  
+;
 
-assignstmt:       var '=' expr {
-					$$ = newStmtNode(AssignK);
-					$$->child[0] = $1;
-					$$->child[1] = $3;
-					}
+assignstmt:
+      var '=' expr {
+		$$ = newStmtNode(AssignK);
+		$$->child[0] = $1;
+		$$->child[1] = $3;
+		}
 ;
 
 index:
-				  iexpr { $$ = newExpNode(IndexK); $$->child[0] = $1; }
-				| iexpr ':' iexpr { $$ = newExpNode(IndexK); $$->child[0] = $1; $$->child[1] = $3; }
+	  iexpr { $$ = newExpNode(IndexK); $$->child[0] = $1; }
+	| iexpr ':' iexpr { $$ = newExpNode(IndexK); $$->child[0] = $1; $$->child[1] = $3; }
 ;
 
 iexpr:
-			expr
-			| ":" { $$ = newExpNode(IndexAllK); }
+	  expr
+	| ":" { $$ = newExpNode(IndexAllK); }
 ;
 
-expr : expr '+' term
-                 { $$ = newExpNode(OpK);
-                   $$->child[0] = $1;
-                   $$->child[1] = $3;
-                   $$->attr.op = "+";
-                 }
-| term          { $$ = $1; }
+expr :
+	  expr '+' term {
+        $$ = newExpNode(OpK);
+        $$->child[0] = $1;
+        $$->child[1] = $3;
+        $$->attr.op = "+";
+        }
+	| term	{ $$ = $1; }
 ;
 
-term : term '*' factor
-		{
-		        $$ = newExpNode(OpK);
-                $$->child[0] = $1;
-                $$->child[1] = $3;
-                $$->attr.op = "*";
+term : term '*' factor{
+	    $$ = newExpNode(OpK);
+        $$->child[0] = $1;
+        $$->child[1] = $3;
+        $$->attr.op = "*";
 		}
-| factor  { $$ = $1; }
-| factor '^' factor
-		{
-		        $$ = newExpNode(OpK);
-                $$->child[0] = $1;
-                $$->child[1] = $3;
-                $$->attr.op = "^";
+	| factor  { $$ = $1; }
+	| factor '^' factor {
+		$$ = newExpNode(OpK);
+        $$->child[0] = $1;
+        $$->child[1] = $3;
+       	$$->attr.op = "^";
 		}
 ;
 
-factor : '(' expr ')'  { $$ = $2; }
-| NUMBER { $$ = newExpNode(ConstK);
-		   $$->attr.val = $1; }
-| var 
+factor :
+	  '(' expr ')'  { $$ = $2; }
+	| NUMBER {
+		$$ = newExpNode(ConstK);
+    	$$->attr.val = $1; 
+    	}
+	| var 
 ;
 
 var :
-				  NAME {
-				$$ = newExpNode(IdK);
-				$$->attr.name = $1;
-				  }
-				| NAME '(' index ')' { 
-				$$ = newExpNode(IdK);
-				$$->attr.name = $1;
-				$$->child[0] = $3;
-				$$->indexed = 1;
-				}
-				| NAME '(' index ',' index ')' { 
-				$$ = newExpNode(IdK);
-				$$->attr.name = $1;
-				$$->child[0] = $3;
-				$$->child[1] = $5;
-				$$->indexed = 2;
-				}
-;		
+	  NAME {
+		$$ = newExpNode(IdK);
+		$$->attr.name = $1;
+		}
+	| NAME '(' index ')' { 
+		$$ = newExpNode(IdK);
+		$$->attr.name = $1;
+		$$->child[0] = $3;
+		$$->indexed = 1;
+		}
+	| NAME '(' index ',' index ')' { 
+		$$ = newExpNode(IdK);
+		$$->attr.name = $1;
+		$$->child[0] = $3;
+		$$->child[1] = $5;
+		$$->indexed = 2;
+		}
+;
+/*array:
+	  expr ':' expr
+	| expr ':' expr ':' expr
+	| '[' array_inner ']' { $$ = $2; }
+;	
+array_inner:
+	  expr
+	| array_inner ',' expr
+	| array_inner ';' expr
+;*/
 
 %%

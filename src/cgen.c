@@ -18,11 +18,11 @@ static void cGen(TreeNode * tree);
    tree. The second parameter (codefile) is the file name of the code file,
    and is used to print the file name as a comment in the code file
 */
-void codeGen(TreeNode * syntaxTree, char * codefile)
+void codeGen(TreeNode * syntaxTree, FILE * codefile)
 {
-	char * s = malloc(strlen(codefile) + 7);
+	char * s = malloc(strlen((char*)codefile) + 7);
 	strcpy(s, "File: ");
-	strcat(s, codefile);
+	strcat(s, (char *)codefile);
 	emitComment("MATLAB Compilation to C Code");
 	emitComment(s);
 	/* generate code for MATLAB program */
@@ -94,7 +94,7 @@ static void genExp(TreeNode * tree)
 			*/
 
 			// turn on code to buffers.
-			char *codeBuffer_old = codeBuffer;
+			int codeBuffer_old = codeBuffer;
 			char *cmdBuffer_old = cmdBuffer;
 			codeBuffer = 1;
 
@@ -122,6 +122,12 @@ static void genExp(TreeNode * tree)
 			emitCode(tree->attr.name);
 
 			/* four cases of how many indices there is */
+
+			/* In the cases the if's collect which values to caluclate and
+			which to substitute.
+			This is because in constant cases for example, the values
+			2+3 should be calculated to 5 for the output.
+			*/
 			if (i2 == NULL && i3 == NULL)
 			{ /* (x) */
 				emitCode("(%s)", idx1->lb);
@@ -135,10 +141,6 @@ static void genExp(TreeNode * tree)
 			}
 			if (i2 != NULL && i4 != NULL)
 			{  /* (x:x,x:x) */
-				/* Collect which values to caluclate and which to substitute.
-				   This is because in constant cases for example, the values
-				   2+3 should be calculated to 5 for the output.
-				*/
 				if (i1->kind.exp == ConstK && i2->kind.exp == ConstK &&
 					i3->kind.exp == ConstK && i4->kind.exp == ConstK)
 					emitCode(".block<%d,%d>(%d,%d)", i1->attr.val - 1, i3->attr.val - 1, i2->attr.val - i1->attr.val + 1, i4->attr.val - i3->attr.val + 1);

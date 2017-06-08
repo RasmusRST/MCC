@@ -63,7 +63,7 @@ BucketList st_lookup(char * name)
 	BucketList l = hashTable[h];
 	while ((l != NULL) && (strcmp(name, l->name) != 0))
 		l = l->next;
-	if (l == NULL) return -1;
+	if (l == NULL) return (BucketList)-1;
 	else return l;
 }
 

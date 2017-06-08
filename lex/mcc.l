@@ -1,19 +1,25 @@
+/* This file is a part of the MATLAB to C++ compiler
+   Developped by Rasmus Steffensen, May 2017.
+*/
+
 %{
-#include <stdio.h>
 #include "globals.h"
 #include "util.h"
 #include "y.tab.h"
+
+extern int isatty(int);
+
 %}
 
 %option nounistd
 
 %%
-("+"|"-")?[0-9]+("."[0-9]+)?((E|e|exp)("+"|"-")?[0-9]+)			return SCIENTIFICVAL;
+("+"|"-")?[0-9]+("."[0-9]+)?((E|e|exp)("+"|"-")?[0-9]+)	  return SCIENTIFICVAL;
 [0-9]+                  yylval.ival=atoi(yytext); return NUMBER;
 [0-9]+("."[0-9]+)       yylval.dval=atoi(yytext); return DECIMAL;
 [a-zA-Z][a-zA-Z0-9]*    yylval.name=strdup(yytext); return NAME;
-"\n"                    ;
-" "						;
+"\n"                    ; /* ignore EOL */
 "\r\n"                  ; /* windows line endings */
+" "						; /* ignore white spaces */
 .               		{return yytext[0];} // match all single characters
 %%
