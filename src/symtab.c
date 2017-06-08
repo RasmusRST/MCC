@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "globals.h"
 #include "symtab.h"
 
 /* SIZE is the size of the hash table */
@@ -33,7 +34,7 @@ static BucketList hashTable[SIZE];
 * loc = memory location is inserted only the
 * first time, otherwise ignored
 */
-void st_insert(char * name, int loc)
+void st_insert(char * name, int loc, TreeNode *m, TreeNode *n)
 {
 	int h = hash(name);
 	BucketList l = hashTable[h];

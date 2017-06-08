@@ -1,5 +1,5 @@
 /* Generic functions for code generation. */
 
-void emitComment(char * c);
+void emitComment(const char* format, ...);
 
 void emitCode(const char* format, ...);

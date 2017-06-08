@@ -13,6 +13,7 @@
 [0-9]+("."[0-9]+)       yylval.dval=atoi(yytext); return DECIMAL;
 [a-zA-Z][a-zA-Z0-9]*    yylval.name=strdup(yytext); return NAME;
 "\n"                    ;
+" "						;
 "\r\n"                  ; /* windows line endings */
 .               		{return yytext[0];} // match all single characters
 %%

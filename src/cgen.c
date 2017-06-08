@@ -14,14 +14,9 @@ int codeBuffer = 0;
 /* prototype for internal recursive code generator */
 static void cGen(TreeNode * tree);
 
-/**********************************************/
-/* the primary function of the code generator */
-/**********************************************/
-/* Procedure codeGen generates code to a code
-* file by traversal of the syntax tree. The
-* second parameter (codefile) is the file name
-* of the code file, and is used to print the
-* file name as a comment in the code file
+/* Procedure codeGen generates code to a code file by traversal of the syntax
+   tree. The second parameter (codefile) is the file name of the code file,
+   and is used to print the file name as a comment in the code file
 */
 void codeGen(TreeNode * syntaxTree, char * codefile)
 {
@@ -46,13 +41,9 @@ static void genStmt(TreeNode * tree)
 	case AssignK:
 		cGen(tree->child[0]);
 		emitCode(" = ");
-		/* generate code for rhs */		
+		/* generate code for rhs */
 		cGen(tree->child[1]);
 		emitCode(";\n");
-		/* now store value */
-		//loc = st_lookup(tree->child[0]->attr.name);
-		//printf("location: %d", loc);
-		//emitComment("<- assign");
 		break; /* assign_k */
 	default:
 		break;
@@ -73,7 +64,8 @@ static void genExp(TreeNode * tree)
 
 	case IdK:
 	{
-		TreeNode *i1, *i2, *i3, *i4, *idx1, *idx2 = NULL;
+		TreeNode *i1, *i2, *i3, *i4, *idx1, *idx2;
+		i1 = NULL; i2 = NULL; i3 = NULL; i4 = NULL; idx1 = NULL; idx2 = NULL;
 		idx1 = tree->child[0];
 		idx2 = tree->child[1];
 		/* Names to help nicefy code look */
@@ -94,7 +86,12 @@ static void genExp(TreeNode * tree)
 		}
 		else
 		{ /* Indexed */
-			/* Issue here is to handle indices correctly. */
+			/* Issue here is to handle indices correctly.
+			   The idea is that the following code generation
+			   will be generated in the buffers lb and rb of idx1
+			   and idx2. This buffered code will be inserted in the
+			   index of the output C code.
+			*/
 
 			// turn on code to buffers.
 			char *codeBuffer_old = codeBuffer;
@@ -104,40 +101,54 @@ static void genExp(TreeNode * tree)
 			// Get code for indices
 			idx1->lb = (char *)malloc(sizeof(char) * 50);
 			idx1->rb = (char *)malloc(sizeof(char) * 50);
+			idx1->lb[0] = '\0';
+			idx1->rb[0] = '\0';
 			cGen(idx1);
 
 			if (idx2 != NULL)
 			{ /* there is also a rhs (.,x) */
 				idx2->lb = (char *)malloc(sizeof(char) * 50);
 				idx2->rb = (char *)malloc(sizeof(char) * 50);
+				idx2->lb[0] = '\0';
+				idx2->rb[0] = '\0';
 				cGen(idx2);
 			}
 
+			// Restore code buffers
 			codeBuffer = codeBuffer_old;
 			cmdBuffer = cmdBuffer_old;
 
+			// Start code generation of the indices.
 			emitCode(tree->attr.name);
 
 			/* four cases of how many indices there is */
-			if (i2 == NULL && i3 == NULL) /* (x) */
-			{
+			if (i2 == NULL && i3 == NULL)
+			{ /* (x) */
 				emitCode("(%s)", idx1->lb);
 			}
-			if (i2 != NULL && i3 == NULL) /* (x:x) */
-			{
-				//emitCode(".block<%s-1,%s-1>(%s-%s+1,%s-%s+1)", idx1->lb);
+			if (i2 != NULL && i3 == NULL) 
+			{ /* (x:x) */
+				if (i1->kind.exp == ConstK && i2->kind.exp == ConstK)
+					emitCode(".block<%d,%d>(%d,%d)", i1->attr.val - 1, 0, i2->attr.val - i1->attr.val + 1, 1);
+				else
+					emitCode(".block<%s-1,0>(%s-%s+1,1)", idx1->lb, idx1->rb, idx1->lb);
 			}
 			if (i2 != NULL && i4 != NULL)
 			{  /* (x:x,x:x) */
-				/* Collect which values to caluclate and which to substitute */
+				/* Collect which values to caluclate and which to substitute.
+				   This is because in constant cases for example, the values
+				   2+3 should be calculated to 5 for the output.
+				*/
 				if (i1->kind.exp == ConstK && i2->kind.exp == ConstK &&
 					i3->kind.exp == ConstK && i4->kind.exp == ConstK)
-					emitCode(".block<%d,%d>(%d,%d)", i1->attr.val-1, i3->attr.val - 1, i2->attr.val - i1->attr.val + 1, i4->attr.val - i3->attr.val + 1);
-				if (i1->kind.exp == IdK && i2->kind.exp == IdK &&
+					emitCode(".block<%d,%d>(%d,%d)", i1->attr.val - 1, i3->attr.val - 1, i2->attr.val - i1->attr.val + 1, i4->attr.val - i3->attr.val + 1);
+				else if (i1->kind.exp == IdK && i2->kind.exp == IdK &&
 					i3->kind.exp == IdK && i4->kind.exp == IdK)
 					emitCode(".block<%s-1,%s-1>(%s-%s+1,%s-%s+1)", idx1->lb, idx2->lb, idx1->rb, idx1->lb, idx2->rb, idx2->lb);
+				else
+					emitCode(".block<%s-1,%s-1>(%s-%s+1,%s-%s+1)", idx1->lb, idx2->lb, idx1->rb, idx1->lb, idx2->rb, idx2->lb); // the same as above, add all cases.
 			}
-		}
+		} /* indexed */
 	}
 	break; /* IdK */
 	case IndexK:
@@ -155,7 +166,8 @@ static void genExp(TreeNode * tree)
 		p1 = tree->child[0];
 		p2 = tree->child[1];
 		/* gen code for ac = left arg */
-		cGen(p1);
+		cGen(p1);		
+		emitCode(" %s ", tree->attr.op);
 		/* gen code for ac = right operand */
 		cGen(p2);
 		break; /* OpK */

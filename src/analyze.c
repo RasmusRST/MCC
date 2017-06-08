@@ -57,7 +57,7 @@ static void insertNode(TreeNode * t)
 		case IdK:
 			if (st_lookup(t->attr.name) == -1)
 				/* not yet in table, so treat as new definition */
-				st_insert(t->attr.name, 10);
+				st_insert(t->attr.name, 10, NULL, NULL);
 			break;
 		default:
 			break;

@@ -39,7 +39,7 @@ int yywrap()
 %token SCIENTIFICVAL
 %token EOL
 
-%type <tree> compstmt statement assignstmt expr term factor var index
+%type <tree> compstmt statement assignstmt expr term factor var index iexpr
 
 %%
 
@@ -71,8 +71,13 @@ assignstmt:       var '=' expr {
 ;
 
 index:
-				  expr { $$ = newExpNode(IndexK); $$->child[0] = $1; }
-				| expr ':' expr { $$ = newExpNode(IndexK); $$->child[0] = $1; $$->child[1] = $3; }
+				  iexpr { $$ = newExpNode(IndexK); $$->child[0] = $1; }
+				| iexpr ':' iexpr { $$ = newExpNode(IndexK); $$->child[0] = $1; $$->child[1] = $3; }
+;
+
+iexpr:
+			expr
+			| ":" { $$ = newExpNode(IndexAllK); }
 ;
 
 expr : expr '+' term
