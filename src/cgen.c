@@ -11,6 +11,11 @@
 char *cmdBuffer;
 int codeBuffer = 0;
 
+// Used to count up the size of an array.
+static int array_gen = 0;
+int *m;
+int *n;
+
 /* prototype for internal recursive code generator */
 static void cGen(TreeNode * tree);
 
@@ -53,15 +58,41 @@ static void genStmt(TreeNode * tree)
   /* Procedure genExp generates code at an expression node */
 static void genExp(TreeNode * tree)
 {
-	int loc;
-
 	TreeNode * p1, *p2;
 	switch (tree->kind.exp) {
 
 	case ConstK:
 		emitCode("%d", tree->attr.val);
 		break; /* ConstK */
+	case ArrayK:
+	{
+		m = &tree->m;
+		n = &tree->n;
+		*m = 1;
+		*n = 1;
+		// turn on code to buffers.
+		int codeBuffer_old = codeBuffer;
+		char *cmdBuffer_old = cmdBuffer;
+		codeBuffer = 1;
+		array_gen = 1; /* makes the IndexK do array insted of indices. */
+		cmdBuffer = (char *)malloc(sizeof(char) * 50);
+		*cmdBuffer = '\0';
 
+		cGen(tree->child[0]);
+
+		// Restore code buffers (makes sure code is sent to file)
+		codeBuffer = codeBuffer_old;
+
+		// Start code generation of the indices.		
+		emitCode("MatrixXd<%d,%d>(", *m, *n);
+		emitCode(cmdBuffer);
+		emitCode(")");
+
+		array_gen = 0;
+		// Restore cmd buffers
+		cmdBuffer = cmdBuffer_old;
+	}
+	break; /* ConstK */
 	case IdK:
 	{
 		TreeNode *i1, *i2, *i3, *i4, *idx1, *idx2;
@@ -124,15 +155,15 @@ static void genExp(TreeNode * tree)
 			/* four cases of how many indices there is */
 
 			/* In the cases the if's collect which values to caluclate and
-			which to substitute.
-			This is because in constant cases for example, the values
-			2+3 should be calculated to 5 for the output.
+			   which to substitute.
+			   This is because in constant cases for example, the values
+			   2+3 should be calculated to 5 for the output.
 			*/
 			if (i2 == NULL && i3 == NULL)
 			{ /* (x) */
 				emitCode("(%s)", idx1->lb);
 			}
-			if (i2 != NULL && i3 == NULL) 
+			if (i2 != NULL && i3 == NULL)
 			{ /* (x:x) */
 				if (i1->kind.exp == ConstK && i2->kind.exp == ConstK)
 					emitCode(".block<%d,%d>(%d,%d)", i1->attr.val - 1, 0, i2->attr.val - i1->attr.val + 1, 1);
@@ -155,12 +186,30 @@ static void genExp(TreeNode * tree)
 	break; /* IdK */
 	case IndexK:
 	{
-		cmdBuffer = tree->lb;
-		cGen(tree->child[0]);
-		if (tree->child[1] != NULL)
-		{
-			cmdBuffer = tree->rb;
-			cGen(tree->child[1]);
+		if (array_gen)
+		{ /* Generates code to deal with array creations. */
+			if (*m == 1 && tree->attr.op[0]==',')
+				(*n)++;
+			else if (tree->attr.op[0]==';')
+				(*m)++;			
+			cGen(tree->child[0]);
+			if (tree->child[1] != NULL)
+			{
+				emitCode(",");
+				cGen(tree->child[1]);
+			}
+
+		}
+		else
+		{ /* Generates code to deal with index of array calculations */
+			/* Write the results of the child code generations to buffer. */
+			cmdBuffer = tree->lb;
+			cGen(tree->child[0]);
+			if (tree->child[1] != NULL)
+			{
+				cmdBuffer = tree->rb;
+				cGen(tree->child[1]);
+			}
 		}
 	}
 	break;
@@ -168,7 +217,7 @@ static void genExp(TreeNode * tree)
 		p1 = tree->child[0];
 		p2 = tree->child[1];
 		/* gen code for ac = left arg */
-		cGen(p1);		
+		cGen(p1);
 		emitCode(" %s ", tree->attr.op);
 		/* gen code for ac = right operand */
 		cGen(p2);
@@ -186,7 +235,7 @@ static void cGen(TreeNode * tree)
 	if (tree != NULL)
 	{
 		switch (tree->nodekind) {
-		case StmtK:
+		case StmtK:			
 			genStmt(tree);
 			break;
 		case ExpK:

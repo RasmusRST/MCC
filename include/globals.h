@@ -7,7 +7,7 @@
 #include <stddef.h>
 #include <string.h>
 
-extern FILE* source; /* source code text file */
+extern FILE* source;  /* source code text file */
 extern FILE* outCode; /* C output code */
 
 typedef enum {StmtK,ExpK} NodeKind;
@@ -15,7 +15,7 @@ typedef enum {IfK,RepeatK,AssignK,ReadK,WriteK} StmtKind;
 typedef enum {OpK,ConstK,IdK,IndexK,IndexAllK, ArrayK} ExpKind;
 
 /* ExpType is used for type checking */
-typedef enum {Void,Integer,Boolean} ExpType;
+typedef enum {UnknownT,scalarT,vectorT,matrixT} ExpType;
 
 #define MAXCHILDREN 3
 
@@ -30,6 +30,8 @@ typedef struct treeNode
              char * name;
 			} attr;
 	 int indexed;
+	 int m;
+	 int n;
 	 char *lb;
 	 char *rb;
 	 ExpType type; /* for type checking of exps */

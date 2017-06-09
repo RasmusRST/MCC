@@ -21,7 +21,7 @@ void emitComment(const char* format, ...)
 	strcpy(str3, str1);
 	strcat(str3, format);
 	strcat(str3, str2);
-	vprintf(str3, args);  /* print to code file */
+	vprintf(str3, args);
 	free(str3);
 
 	va_end(args);

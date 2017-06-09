@@ -46,6 +46,22 @@ static void insertNode(TreeNode * t)
 		switch (t->kind.stmt)
 		{
 		case AssignK:
+		{
+			if (st_lookup(t->child[0]->attr.name) == (BucketList)-1)
+			{   /* not yet in table, so treat as new definition */
+				if(t->child[1]->kind.exp == ArrayK)
+					st_insert(t->child[0]->attr.name, matrixT, NULL, NULL);
+				else if(t->child[1]->kind.exp == ConstK)
+					st_insert(t->child[0]->attr.name, scalarT, NULL, NULL);
+			}
+			else
+			{   /* in table, possibly update type */
+				if (t->child[1]->kind.exp == ArrayK)
+					st_lookup(t->attr.name)->type = matrixT;
+				else if (t->child[1]->kind.exp == ConstK)
+					st_lookup(t->attr.name)->type = scalarT;
+			}
+		}
 			break;
 		default:
 			break;
@@ -56,8 +72,9 @@ static void insertNode(TreeNode * t)
 		{
 		case IdK:
 			if (st_lookup(t->attr.name) == (BucketList)-1)
-				/* not yet in table, so treat as new definition */
-				st_insert(t->attr.name, 10, NULL, NULL);
+			{   /* not yet in table, so treat as new definition */
+				st_insert(t->attr.name, UnknownT, NULL, NULL);
+			}
 			break;
 		default:
 			break;

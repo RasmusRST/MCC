@@ -34,7 +34,7 @@ static BucketList hashTable[SIZE];
 * loc = memory location is inserted only the
 * first time, otherwise ignored
 */
-void st_insert(char * name, int loc, TreeNode *m, TreeNode *n)
+void st_insert(char * name, ExpType type, TreeNode *m, TreeNode *n)
 {
 	int h = hash(name);
 	BucketList l = hashTable[h];
@@ -44,7 +44,7 @@ void st_insert(char * name, int loc, TreeNode *m, TreeNode *n)
 	{
 		l = (BucketList)malloc(sizeof(struct BucketListRec));
 		l->name = name;
-		l->memloc = loc;
+		l->type = type;
 		l->next = hashTable[h];
 		hashTable[h] = l;
 	}
@@ -73,7 +73,7 @@ BucketList st_lookup(char * name)
 void printSymTab()
 {
 	int i;
-	printf("Variable Name  Location  Array Size\n");
+	printf("Variable Name  Type      Array Size\n");
 	printf("-------------  --------  ----------\n");
 	for (i = 0; i<SIZE; ++i)
 	{
@@ -83,7 +83,7 @@ void printSymTab()
 			while (l != NULL)
 			{
 				printf( "%-14s ", l->name);
-				printf("%-8d  ", l->memloc);
+				printf("%-9d  ", l->type);
 				printf("\n");
 				l = l->next;
 			}

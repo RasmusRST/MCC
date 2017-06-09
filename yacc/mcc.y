@@ -42,7 +42,7 @@ int yywrap()
 %token SCIENTIFICVAL
 %token EOL
 
-%type <tree> compstmt statement assignstmt expr term factor var index iexpr /* array array_inner */
+%type <tree> compstmt statement assignstmt expr term factor var index iexpr array array_inner
 
 %%
 
@@ -119,6 +119,7 @@ factor :
     	$$->attr.val = $1; 
     	}
 	| var 
+	| array
 ;
 
 var :
@@ -140,15 +141,17 @@ var :
 		$$->indexed = 2;
 		}
 ;
-/*array:
-	  expr ':' expr
-	| expr ':' expr ':' expr
-	| '[' array_inner ']' { $$ = $2; }
+array:
+	  '[' array_inner ']' {
+		$$ = newExpNode(ArrayK);
+		$$->child[0] = $2;
+		}
 ;	
 array_inner:
-	  expr
-	| array_inner ',' expr
-	| array_inner ';' expr
-;*/
+	  array_inner ';' expr { $$ = newExpNode(IndexK); $$->attr.op = ";"; $$->child[0] = $1; $$->child[1] = $3; }
+	| array_inner ',' expr { $$ = newExpNode(IndexK); $$->attr.op = ","; $$->child[0] = $1; $$->child[1] = $3; }
+	| expr { $$ = $1;};
+
+;
 
 %%
