@@ -62,8 +62,35 @@ static void genExp(TreeNode * tree)
 	switch (tree->kind.exp) {
 
 	case ConstK:
-		emitCode("%d", tree->attr.val);
+		emitCode("%d.0f", tree->attr.val);
 		break; /* ConstK */
+	case FunctionK:
+	{
+		if (strcmp(tree->attr.name, "sign") == 0)
+		{
+			emitCode("copysign(1.0f, ");
+			cGen(tree->child[0]);
+			emitCode(")");
+		}
+		else
+		{
+			// Generate arguments if they exists.
+			if (tree->child[0] != 0) {
+				emitCode("%s(", tree->attr.name);
+				cGen(tree->child[0]);
+			}
+			if (tree->child[1] != 0) {
+				emitCode(",");
+				cGen(tree->child[1]);
+			}
+			if (tree->child[2] != 0) {
+				emitCode(",");
+				cGen(tree->child[2]);
+			}
+			emitCode(")");
+		}
+	}
+	break; /* ConstK */
 	case ArrayK:
 	{
 		m = &tree->m;
@@ -170,6 +197,9 @@ static void genExp(TreeNode * tree)
 				else
 					emitCode(".block<%s-1,0>(%s-%s+1,1)", idx1->lb, idx1->rb, idx1->lb);
 			}
+			if (i2 == NULL && i3 != NULL && i4 == NULL)
+			{ /* (x,x) */
+			}
 			if (i2 != NULL && i4 != NULL)
 			{  /* (x:x,x:x) */
 				if (i1->kind.exp == ConstK && i2->kind.exp == ConstK &&
@@ -188,10 +218,10 @@ static void genExp(TreeNode * tree)
 	{
 		if (array_gen)
 		{ /* Generates code to deal with array creations. */
-			if (*m == 1 && tree->attr.op[0]==',')
+			if (*m == 1 && tree->attr.op[0] == ',')
 				(*n)++;
-			else if (tree->attr.op[0]==';')
-				(*m)++;			
+			else if (tree->attr.op[0] == ';')
+				(*m)++;
 			cGen(tree->child[0]);
 			if (tree->child[1] != NULL)
 			{
@@ -216,11 +246,30 @@ static void genExp(TreeNode * tree)
 	case OpK:
 		p1 = tree->child[0];
 		p2 = tree->child[1];
-		/* gen code for ac = left arg */
-		cGen(p1);
-		emitCode(" %s ", tree->attr.op);
-		/* gen code for ac = right operand */
-		cGen(p2);
+		if (*tree->attr.op == '^')
+		{
+			emitCode("pow(");
+			cGen(p1);
+			emitCode(", ");
+			/* gen code for ac = right operand */
+			cGen(p2);
+			emitCode(")");
+		}
+		else if (*tree->attr.op == '(')
+		{
+			emitCode("(");
+			cGen(p1);
+			emitCode(")");
+		}
+		else
+		{			
+			cGen(p1); /* gen code for ac = left arg */
+			if (p1 == NULL)
+				emitCode(" %s", tree->attr.op); /* do not indent pre fix operators like (-var) */
+			else
+				emitCode(" %s ", tree->attr.op);
+			cGen(p2); /* gen code for ac = right operand */
+		}
 		break; /* OpK */
 	default:
 		break;
@@ -235,7 +284,7 @@ static void cGen(TreeNode * tree)
 	if (tree != NULL)
 	{
 		switch (tree->nodekind) {
-		case StmtK:			
+		case StmtK:
 			genStmt(tree);
 			break;
 		case ExpK:

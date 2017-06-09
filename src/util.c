@@ -100,6 +100,9 @@ void printTree(TreeNode * tree)
 			case ConstK:
 				printf("Const: %d\n", tree->attr.val);
 				break;
+			case FunctionK:
+				printf("Function: %s\n", tree->attr.name);
+				break;
 			case IdK:
 				printf("Id: %s\n", tree->attr.name);
 				break;
@@ -112,7 +115,7 @@ void printTree(TreeNode * tree)
 			}
 			break;
 			case ArrayK:
-				printf("Array:\n", tree->attr.name);
+				printf("Array:\n");
 				break;
 			default:
 				printf("Unknown ExpNode kind\n");

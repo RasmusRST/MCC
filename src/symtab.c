@@ -38,7 +38,7 @@ void st_insert(char * name, ExpType type, TreeNode *m, TreeNode *n)
 {
 	int h = hash(name);
 	BucketList l = hashTable[h];
-	while ((l != NULL) && (strcmp(name, l->name) != 0))
+	while ((l != NULL) && strcmp(name, l->name) != 0)
 		l = l->next;
 	if (l == NULL) /* variable not yet in table */
 	{

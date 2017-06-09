@@ -12,7 +12,7 @@ extern FILE* outCode; /* C output code */
 
 typedef enum {StmtK,ExpK} NodeKind;
 typedef enum {IfK,RepeatK,AssignK,ReadK,WriteK} StmtKind;
-typedef enum {OpK,ConstK,IdK,IndexK,IndexAllK, ArrayK} ExpKind;
+typedef enum {OpK,ConstK,IdK,IndexK,IndexAllK, ArrayK, FunctionK} ExpKind;
 
 /* ExpType is used for type checking */
 typedef enum {UnknownT,scalarT,vectorT,matrixT} ExpType;

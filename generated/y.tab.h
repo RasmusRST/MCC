@@ -50,7 +50,15 @@ extern int yydebug;
     DECIMAL = 260,
     NAME = 261,
     SCIENTIFICVAL = 262,
-    EOL = 263
+    EOL = 263,
+    ATAN = 264,
+    ATAN2 = 265,
+    COS = 266,
+    SIN = 267,
+    SQRT = 268,
+    SIGN = 269,
+    IF = 270,
+    END = 271
   };
 #endif
 /* Tokens.  */
@@ -60,6 +68,14 @@ extern int yydebug;
 #define NAME 261
 #define SCIENTIFICVAL 262
 #define EOL 263
+#define ATAN 264
+#define ATAN2 265
+#define COS 266
+#define SIN 267
+#define SQRT 268
+#define SIGN 269
+#define IF 270
+#define END 271
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -74,7 +90,7 @@ union YYSTYPE
 	char *name;	 // name of function or variable
 	TreeNode * tree;
 
-#line 78 "generated/y.tab.h" /* yacc.c:1909  */
+#line 94 "generated/y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

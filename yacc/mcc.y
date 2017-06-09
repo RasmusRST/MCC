@@ -41,8 +41,10 @@ int yywrap()
 %token <name> NAME
 %token SCIENTIFICVAL
 %token EOL
+%token ATAN ATAN2 COS SIN SQRT SIGN
+%token IF END
 
-%type <tree> compstmt statement assignstmt expr term factor var index iexpr array array_inner
+%type <tree> compstmt statement assignstmt expr term factor var index iexpr array array_inner functions
 
 %%
 
@@ -87,39 +89,54 @@ iexpr:
 	| ":" { $$ = newExpNode(IndexAllK); }
 ;
 
-expr :
+expr:
 	  expr '+' term {
         $$ = newExpNode(OpK);
         $$->child[0] = $1;
         $$->child[1] = $3;
         $$->attr.op = "+";
         }
+	| expr '-' term {
+        $$ = newExpNode(OpK);
+        $$->child[0] = $1;
+        $$->child[1] = $3;
+        $$->attr.op = "-";
+        }
 	| term	{ $$ = $1; }
+	| {$$ = NULL; }
 ;
 
-term : term '*' factor{
+term:
+	  term '*' factor{
 	    $$ = newExpNode(OpK);
         $$->child[0] = $1;
         $$->child[1] = $3;
         $$->attr.op = "*";
 		}
-	| factor  { $$ = $1; }
+	| term '/' factor {
+	    $$ = newExpNode(OpK);
+        $$->child[0] = $1;
+        $$->child[1] = $3;
+        $$->attr.op = "/";
+		}		
 	| factor '^' factor {
 		$$ = newExpNode(OpK);
         $$->child[0] = $1;
         $$->child[1] = $3;
        	$$->attr.op = "^";
 		}
+	| factor  { $$ = $1; }		
 ;
 
 factor :
-	  '(' expr ')'  { $$ = $2; }
+	 functions	
+	| '(' expr ')'  { $$=newExpNode(OpK); $$->attr.op="("; $$->child[0]=$2;  }	
+	| var 
+	| array
 	| NUMBER {
 		$$ = newExpNode(ConstK);
     	$$->attr.val = $1; 
     	}
-	| var 
-	| array
 ;
 
 var :
@@ -151,7 +168,14 @@ array_inner:
 	  array_inner ';' expr { $$ = newExpNode(IndexK); $$->attr.op = ";"; $$->child[0] = $1; $$->child[1] = $3; }
 	| array_inner ',' expr { $$ = newExpNode(IndexK); $$->attr.op = ","; $$->child[0] = $1; $$->child[1] = $3; }
 	| expr { $$ = $1;};
-
 ;
 
+functions:
+	  COS '(' expr ')' { $$ = newExpNode(FunctionK); $$->attr.name = "cos"; $$->child[0] = $3; }
+	| SIN '(' expr ')' { $$ = newExpNode(FunctionK); $$->attr.name = "sin"; $$->child[0] = $3; }
+	| ATAN2 '(' expr ',' expr ')' { $$ = newExpNode(FunctionK); $$->attr.name = "atan2"; $$->child[0] = $3;  $$->child[1] = $5; }
+	| SQRT '(' expr ')' { $$ = newExpNode(FunctionK); $$->attr.name = "sqrt"; $$->child[0] = $3; }
+	| ATAN '(' expr ')' { $$ = newExpNode(FunctionK); $$->attr.name = "atan"; $$->child[0] = $3; }
+	| SIGN '(' expr ')' { $$ = newExpNode(FunctionK); $$->attr.name = "sign"; $$->child[0] = $3; }
+;
 %%
