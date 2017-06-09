@@ -37,6 +37,7 @@ int yywrap()
 
 %token <ival> NUMBER
 %token <string> WORD
+%token <name> COMMENT
 %token <dval> DECIMAL
 %token <name> NAME
 %token SCIENTIFICVAL
@@ -137,6 +138,10 @@ factor :
 		$$ = newExpNode(ConstK);
     	$$->attr.val = $1; 
     	}
+	| DECIMAL {
+		$$ = newExpNode(DecK);
+    	$$->attr.dval = $1; 
+    	}		
 ;
 
 var :

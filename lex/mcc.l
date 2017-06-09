@@ -26,12 +26,14 @@ extern int isatty(int);
 
 ("+"|"-")?[0-9]+("."[0-9]+)?((E|e|exp)("+"|"-")?[0-9]+)	  return SCIENTIFICVAL;
 [0-9]+                  yylval.ival=atoi(yytext); return NUMBER;
-[0-9]+("."[0-9]+)       yylval.dval=atoi(yytext); return DECIMAL;
+[0-9]+("."[0-9]+)       yylval.dval=atof(yytext); return DECIMAL;
 [a-zA-Z"_"][a-zA-Z0-9"_"]*    yylval.name=strdup(yytext); return NAME;
 
 "\n"                    ; /* ignore EOL */
 "\r\n"                  ; /* windows line endings */
 " "						; /* ignore white spaces */
+"\t"						; /* ignore tabs */
 "..."					; /* ignore MATLAB next lines */
+"%"[a-zA-Z0-9\_\+\-\*\\" "":""/"","";"\"".""("")"]*"\r"*"\n"  ;
 .               		{return yytext[0];} // match all single characters
 %%

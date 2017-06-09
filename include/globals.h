@@ -12,7 +12,7 @@ extern FILE* outCode; /* C output code */
 
 typedef enum {StmtK,ExpK} NodeKind;
 typedef enum {IfK,RepeatK,AssignK,ReadK,WriteK} StmtKind;
-typedef enum {OpK,ConstK,IdK,IndexK,IndexAllK, ArrayK, FunctionK} ExpKind;
+typedef enum {OpK,ConstK, DecK,IdK,IndexK,IndexAllK, ArrayK, FunctionK, CommentK} ExpKind;
 
 /* ExpType is used for type checking */
 typedef enum {UnknownT,scalarT,vectorT,matrixT} ExpType;
@@ -27,7 +27,8 @@ typedef struct treeNode
      union { StmtKind stmt; ExpKind exp;} kind;
      union { char *op;
              int val;
-             char * name;
+			 double dval;
+             char * name;			 
 			} attr;
 	 int indexed;
 	 int m;

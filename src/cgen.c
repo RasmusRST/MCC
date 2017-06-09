@@ -61,9 +61,15 @@ static void genExp(TreeNode * tree)
 	TreeNode * p1, *p2;
 	switch (tree->kind.exp) {
 
+	case CommentK:
+		emitCode("//%s", tree->attr.name);
+		break;
 	case ConstK:
 		emitCode("%d.0f", tree->attr.val);
 		break; /* ConstK */
+	case DecK:
+		emitCode("%f", tree->attr.dval);
+		break;
 	case FunctionK:
 	{
 		if (strcmp(tree->attr.name, "sign") == 0)
@@ -188,7 +194,10 @@ static void genExp(TreeNode * tree)
 			*/
 			if (i2 == NULL && i3 == NULL)
 			{ /* (x) */
-				emitCode("(%s)", idx1->lb);
+				if (i1->kind.exp == ConstK)
+					emitCode("(%d)", i1->attr.val - 1);
+				else
+					emitCode("(%s)", idx1->lb);
 			}
 			if (i2 != NULL && i3 == NULL)
 			{ /* (x:x) */
@@ -228,7 +237,6 @@ static void genExp(TreeNode * tree)
 				emitCode(",");
 				cGen(tree->child[1]);
 			}
-
 		}
 		else
 		{ /* Generates code to deal with index of array calculations */
@@ -262,7 +270,7 @@ static void genExp(TreeNode * tree)
 			emitCode(")");
 		}
 		else
-		{			
+		{
 			cGen(p1); /* gen code for ac = left arg */
 			if (p1 == NULL)
 				emitCode(" %s", tree->attr.op); /* do not indent pre fix operators like (-var) */

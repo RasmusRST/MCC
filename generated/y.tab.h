@@ -47,35 +47,37 @@ extern int yydebug;
   {
     NUMBER = 258,
     WORD = 259,
-    DECIMAL = 260,
-    NAME = 261,
-    SCIENTIFICVAL = 262,
-    EOL = 263,
-    ATAN = 264,
-    ATAN2 = 265,
-    COS = 266,
-    SIN = 267,
-    SQRT = 268,
-    SIGN = 269,
-    IF = 270,
-    END = 271
+    COMMENT = 260,
+    DECIMAL = 261,
+    NAME = 262,
+    SCIENTIFICVAL = 263,
+    EOL = 264,
+    ATAN = 265,
+    ATAN2 = 266,
+    COS = 267,
+    SIN = 268,
+    SQRT = 269,
+    SIGN = 270,
+    IF = 271,
+    END = 272
   };
 #endif
 /* Tokens.  */
 #define NUMBER 258
 #define WORD 259
-#define DECIMAL 260
-#define NAME 261
-#define SCIENTIFICVAL 262
-#define EOL 263
-#define ATAN 264
-#define ATAN2 265
-#define COS 266
-#define SIN 267
-#define SQRT 268
-#define SIGN 269
-#define IF 270
-#define END 271
+#define COMMENT 260
+#define DECIMAL 261
+#define NAME 262
+#define SCIENTIFICVAL 263
+#define EOL 264
+#define ATAN 265
+#define ATAN2 266
+#define COS 267
+#define SIN 268
+#define SQRT 269
+#define SIGN 270
+#define IF 271
+#define END 272
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -90,7 +92,7 @@ union YYSTYPE
 	char *name;	 // name of function or variable
 	TreeNode * tree;
 
-#line 94 "generated/y.tab.h" /* yacc.c:1909  */
+#line 96 "generated/y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

@@ -100,6 +100,9 @@ void printTree(TreeNode * tree)
 			case ConstK:
 				printf("Const: %d\n", tree->attr.val);
 				break;
+			case DecK:
+				printf("Const: %f\n", tree->attr.dval);
+				break;
 			case FunctionK:
 				printf("Function: %s\n", tree->attr.name);
 				break;
