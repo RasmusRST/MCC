@@ -59,7 +59,7 @@ static void insertNode(TreeNode * t)
 				if (t->child[1]->kind.exp == ArrayK)
 					st_lookup(t->attr.name)->type = matrixT;
 				else if (t->child[1]->kind.exp == ConstK)
-					st_lookup(t->attr.name)->type = scalarT;
+					st_lookup(t->child[0]->attr.name)->type = scalarT;
 			}
 		}
 			break;

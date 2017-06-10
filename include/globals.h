@@ -11,8 +11,8 @@ extern FILE* source;  /* source code text file */
 extern FILE* outCode; /* C output code */
 
 typedef enum {StmtK,ExpK} NodeKind;
-typedef enum {IfK,RepeatK,AssignK,ReadK,WriteK} StmtKind;
-typedef enum {OpK,ConstK, DecK,IdK,IndexK,IndexAllK, ArrayK, FunctionK, CommentK} ExpKind;
+typedef enum {IfK,RepeatK,AssignK,ReadK,WriteK, CommentK, EndlK} StmtKind;
+typedef enum {OpK,ConstK, DecK,IdK,IndexK,IndexAllK, ArrayK, FunctionK} ExpKind;
 
 /* ExpType is used for type checking */
 typedef enum {UnknownT,scalarT,vectorT,matrixT} ExpType;
@@ -22,6 +22,7 @@ typedef enum {UnknownT,scalarT,vectorT,matrixT} ExpType;
 typedef struct treeNode
    { struct treeNode * child[MAXCHILDREN];
      struct treeNode * sibling;
+	 struct treeNode * prevsibling;
      int lineno;
      NodeKind nodekind;
      union { StmtKind stmt; ExpKind exp;} kind;
@@ -31,10 +32,10 @@ typedef struct treeNode
              char * name;			 
 			} attr;
 	 int indexed;
-	 int m;
-	 int n;
-	 char *lb;
-	 char *rb;
+	 int m; /* rows */
+	 int n; /* columns */
+	 char *lb; /* buffers to fill up with code if not going to code file. */
+	 char *rb; /* lb for left child, rb for right child, see codebuffer and cmdBuffer */
 	 ExpType type; /* for type checking of exps */
    } TreeNode;
 

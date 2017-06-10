@@ -13,6 +13,8 @@ extern int isatty(int);
 
 %option nounistd
 
+comment  "%"[a-zA-Z0-9\_\+\-\*\\" "":""/"","";"\"".""("")"]*
+
 %%
 ("if"|"IF"|"If")		return IF;
 ("end"|"end"|"end")		return END;
@@ -29,11 +31,11 @@ extern int isatty(int);
 [0-9]+("."[0-9]+)       yylval.dval=atof(yytext); return DECIMAL;
 [a-zA-Z"_"][a-zA-Z0-9"_"]*    yylval.name=strdup(yytext); return NAME;
 
-"\n"                    ; /* ignore EOL */
-"\r\n"                  ; /* windows line endings */
+"\n"                    return EOL;
+"\r\n"                  return EOL; /* windows line endings */
 " "						; /* ignore white spaces */
-"\t"						; /* ignore tabs */
-"..."					; /* ignore MATLAB next lines */
-"%"[a-zA-Z0-9\_\+\-\*\\" "":""/"","";"\"".""("")"]*"\r"*"\n"  ;
+"\t"					; /* ignore tabs */
+"..."" "*"\r"*"\n"		; /* ignore MATLAB next lines */
+{comment}"\r"*"\n"		yylval.name=strdup(yytext); return COMMENT;
 .               		{return yytext[0];} // match all single characters
 %%

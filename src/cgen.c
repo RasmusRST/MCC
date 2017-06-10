@@ -16,6 +16,8 @@ static int array_gen = 0;
 int *m;
 int *n;
 
+static int longComment = 0; /* Used to identify long comments */
+
 /* prototype for internal recursive code generator */
 static void cGen(TreeNode * tree);
 
@@ -48,8 +50,45 @@ static void genStmt(TreeNode * tree)
 		emitCode(" = ");
 		/* generate code for rhs */
 		cGen(tree->child[1]);
-		emitCode(";\n");
+		emitCode(";");
 		break; /* assign_k */
+	case CommentK:
+	{
+		if (tree->prevsibling != NULL)
+		{ /* not first node */
+			if (tree->sibling->kind.exp == CommentK && tree->sibling->sibling->kind.exp == CommentK && tree->prevsibling->kind.stmt != AssignK && longComment == 0)
+			{
+				longComment = 1;
+				emitCode("/*%s", &tree->attr.name[1]);
+			}
+			else if (tree->sibling->kind.exp == CommentK && longComment == 1)
+				emitCode("  %s", &tree->attr.name[1]);
+			else if (tree->sibling->kind.exp != CommentK && longComment == 1)
+			{
+				longComment = 0;
+				emitCode("  %s*/\n", &tree->attr.name[1]);
+			}
+			else
+				emitCode("//%s", &tree->attr.name[1]);
+		}
+		else
+		{ /* first node */
+			if (tree->sibling->kind.exp == CommentK)
+			{
+				longComment = 1;
+				emitCode("/*%s", &tree->attr.name[1]);
+			}
+			else
+			emitCode("//%s", &tree->attr.name[1]);
+		}
+
+	}
+	break;
+	case EndlK:
+	{
+		emitCode("\n");
+	}
+	break;
 	default:
 		break;
 	}
@@ -68,7 +107,7 @@ static void genExp(TreeNode * tree)
 		emitCode("%d.0f", tree->attr.val);
 		break; /* ConstK */
 	case DecK:
-		emitCode("%f", tree->attr.dval);
+		emitCode("%ff", tree->attr.dval);
 		break;
 	case FunctionK:
 	{

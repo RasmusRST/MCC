@@ -45,7 +45,7 @@ int yywrap()
 %token ATAN ATAN2 COS SIN SQRT SIGN
 %token IF END
 
-%type <tree> compstmt statement assignstmt expr term factor var index iexpr array array_inner functions
+%type <tree> compstmt statement assignstmt expr term factor var index iexpr array array_inner functions comment
 
 %%
 
@@ -54,22 +54,34 @@ program:
 
 compstmt:
       /*empty */  { $$ = NULL; }
-    | compstmt statement ';' {
+    | compstmt statement {
 		TreeNode * t = $1;
 	    if (t != NULL)		  
         {
         	while (t->sibling)
         	t = t->sibling;
         	t->sibling = $2;
+			t->sibling->prevsibling = t;
         	$$ = $1;
         }
-        else $$ = $2;
+        else
+		{
+		/* first node */
+		$$ = $2;
+		$$->prevsibling = NULL;
+		}
 		}
 ;
 
 statement:
-	  expr
-    | assignstmt				  
+	  expr ';'
+    | assignstmt ';'
+    | comment	
+	| EOL { $$=newStmtNode(EndlK); }
+;
+
+comment:
+	COMMENT { $$=newStmtNode(CommentK); $$->attr.name=$1; }
 ;
 
 assignstmt:

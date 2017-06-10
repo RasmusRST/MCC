@@ -1,5 +1,5 @@
-%ECEF_to_NED - Converts Cartesian  to curvilinear position, velocity
-%resolving axes from ECEF to NED and attitude from ECEF- to NED-referenced
+% ECEF_to_NED - Converts Cartesian  to curvilinear position, velocity
+% resolving axes from ECEF to NED and attitude from ECEF- to NED-referenced
 %
 % Software for use with "Principles of GNSS, Inertial, and Multisensor
 % Integrated Navigation Systems," Second Edition.
@@ -80,5 +80,3 @@ v_eb_n = C_e_n * v_eb_e;
 
 % Transform attitude using (2.15)
 C_b_n = C_e_n * C_b_e;
-
-% Ends
