@@ -1,3 +1,8 @@
+/* Functions needed for:
+   Generation of nodes in the yacc (.y) file.
+   Printing of syntax tree.
+*/
+
 #include "globals.h"
 
 /* Function newStmtNode creates a new statement
@@ -71,6 +76,9 @@ void printTree(TreeNode * tree)
 		if (tree->nodekind == StmtK)
 		{
 			switch (tree->kind.stmt) {
+			case FunK:
+				printf("Fun\n");
+				break;
 			case IfK:
 				printf("If\n");
 				break;
@@ -88,6 +96,12 @@ void printTree(TreeNode * tree)
 				break;
 			case CommentK:
 				printf("Comment\n");
+				break;
+			case ForK:
+				printf("For\n");
+				break;
+			case EndK:
+				printf("End\n");
 				break;
 			case EndlK:
 				printf("");
@@ -125,6 +139,9 @@ void printTree(TreeNode * tree)
 			break;
 			case ArrayK:
 				printf("Array:\n");
+				break;
+			case ArgsK:
+				printf("Arg: %s\n", tree->attr.name);
 				break;
 			default:
 				printf("Unknown ExpNode kind\n");

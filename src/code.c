@@ -1,3 +1,5 @@
+/* helper functions to code generation */
+
 #include "globals.h"
 #include "code.h"
 

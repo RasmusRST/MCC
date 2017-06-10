@@ -48,36 +48,44 @@ extern int yydebug;
     NUMBER = 258,
     WORD = 259,
     COMMENT = 260,
-    DECIMAL = 261,
-    NAME = 262,
-    SCIENTIFICVAL = 263,
-    EOL = 264,
-    ATAN = 265,
-    ATAN2 = 266,
-    COS = 267,
-    SIN = 268,
-    SQRT = 269,
-    SIGN = 270,
-    IF = 271,
-    END = 272
+    CMP = 261,
+    DECIMAL = 262,
+    NAME = 263,
+    SCIENTIFICVAL = 264,
+    EOL = 265,
+    ATAN = 266,
+    ATAN2 = 267,
+    COS = 268,
+    SIN = 269,
+    SQRT = 270,
+    SIGN = 271,
+    FUN = 272,
+    IF = 273,
+    FOR = 274,
+    WHILE = 275,
+    END = 276
   };
 #endif
 /* Tokens.  */
 #define NUMBER 258
 #define WORD 259
 #define COMMENT 260
-#define DECIMAL 261
-#define NAME 262
-#define SCIENTIFICVAL 263
-#define EOL 264
-#define ATAN 265
-#define ATAN2 266
-#define COS 267
-#define SIN 268
-#define SQRT 269
-#define SIGN 270
-#define IF 271
-#define END 272
+#define CMP 261
+#define DECIMAL 262
+#define NAME 263
+#define SCIENTIFICVAL 264
+#define EOL 265
+#define ATAN 266
+#define ATAN2 267
+#define COS 268
+#define SIN 269
+#define SQRT 270
+#define SIGN 271
+#define FUN 272
+#define IF 273
+#define FOR 274
+#define WHILE 275
+#define END 276
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -92,7 +100,7 @@ union YYSTYPE
 	char *name;	 // name of function or variable
 	TreeNode * tree;
 
-#line 96 "generated/y.tab.h" /* yacc.c:1909  */
+#line 104 "generated/y.tab.h" /* yacc.c:1909  */
 };
 
 typedef union YYSTYPE YYSTYPE;

@@ -1,4 +1,4 @@
-/* This file implements a symbol table for a compiler */
+/* This file implements a symbol table for the compiler */
 
 #include <stdio.h>
 #include <stdlib.h>

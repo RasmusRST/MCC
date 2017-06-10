@@ -38,19 +38,49 @@ int yywrap()
 %token <ival> NUMBER
 %token <string> WORD
 %token <name> COMMENT
+%token <name> CMP
 %token <dval> DECIMAL
 %token <name> NAME
 %token SCIENTIFICVAL
 %token EOL
 %token ATAN ATAN2 COS SIN SQRT SIGN
-%token IF END
+%token FUN;
+%token IF FOR WHILE END
 
-%type <tree> compstmt statement assignstmt expr term factor var index iexpr array array_inner functions comment
+%type <tree> compstmt statement assignstmt expr term factor var index iexpr array array_inner functions comment args
 
 %%
 
 program: 
-	  compstmt { savedTree = $1; } 
+	  compstmt {
+	  if(savedTree == NULL)
+	  { /* no function file, i.e. script file */
+		savedTree = $1;
+	  } 
+	  else
+	  { /* function file */
+		savedTree->sibling = $1;
+	  }
+	  }
+	| FUN '[' args ']' '=' NAME '(' args ')' compstmt {
+	  TreeNode *p = newStmtNode(FunK);
+	  savedTree = p;
+	  p->attr.name = $6;
+	  p->child[0] = $3;
+	  p->child[1] = $8;
+	  p->sibling = $10;
+	}
+;
+
+args:
+	  args ',' NAME {
+		TreeNode *p = newExpNode(ArgsK);
+		p->attr.name = $3;
+		$$ = p;
+		$$->child[0] = $1;		
+		}
+	| NAME { $$ = newExpNode(ArgsK); $$->attr.name = $1; }
+;
 
 compstmt:
       /*empty */  { $$ = NULL; }
@@ -76,6 +106,24 @@ compstmt:
 statement:
 	  expr ';'
     | assignstmt ';'
+	| FOR var '=' expr ':' expr
+		{
+			$$=newStmtNode(ForK);
+			$$->child[0] = $2;
+			$$->child[1] = $4;
+			$$->child[2] = $6;
+		}	
+	| IF var CMP expr
+		{
+			$$=newStmtNode(IfK);
+			$$->child[0] = $2;
+			$$->child[1] = $4;
+			$$->attr.name = $3;
+		}
+	| END
+		{
+			$$=newStmtNode(EndK);
+		}			
     | comment	
 	| EOL { $$=newStmtNode(EndlK); }
 ;

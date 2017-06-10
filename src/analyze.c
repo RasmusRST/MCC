@@ -1,4 +1,6 @@
-/* analyze.c: Functions for analyzing an abstract syntax tree */
+/* analyze.c: Functions for analyzing an abstract syntax tree:
+   Mainly: Traverse tree for symbol table generation.
+*/
 
 #include "globals.h"
 #include "symtab.h"

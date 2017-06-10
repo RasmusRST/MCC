@@ -3,8 +3,6 @@
 #ifndef _SYMTAB_H_
 #define _SYMTAB_H_
 
-
-
 /* The record in the bucket lists for each variable, including name,
 * assigned memory location.
 */

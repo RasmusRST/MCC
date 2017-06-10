@@ -18,6 +18,8 @@ int *n;
 
 static int longComment = 0; /* Used to identify long comments */
 
+static int onlyInts = 0; /* Used to force integer constants */
+
 /* prototype for internal recursive code generator */
 static void cGen(TreeNode * tree);
 
@@ -45,6 +47,13 @@ static void genStmt(TreeNode * tree)
 	int savedLoc1, savedLoc2, currentLoc;
 	int loc;
 	switch (tree->kind.stmt) {
+	case FunK:
+		emitCode("void %s(", tree->attr.name);
+		cGen(tree->child[1]);
+		emitCode("\t// input\n\t\t");
+		cGen(tree->child[0]);
+		emitCode("\t //output\n)\n{");
+		break;
 	case AssignK:
 		cGen(tree->child[0]);
 		emitCode(" = ");
@@ -88,7 +97,7 @@ static void genStmt(TreeNode * tree)
 				emitCode("/*%s", &tree->attr.name[1]);
 			}
 			else
-			emitCode("//%s", &tree->attr.name[1]);
+				emitCode("//%s", &tree->attr.name[1]);
 		}
 
 	}
@@ -96,6 +105,36 @@ static void genStmt(TreeNode * tree)
 	case EndlK:
 	{
 		emitCode("\n");
+	}
+	break;
+	case ForK:
+	{
+		onlyInts = 1;
+		emitCode("for (int ");
+		cGen(tree->child[0]);
+		emitCode(" = ");
+		if (tree->child[1]->kind.exp == ConstK)
+			emitCode("%d", tree->child[1]->attr.val - 1);
+		else
+			cGen(tree->child[1] - 1);
+		emitCode("; i < ");
+		cGen(tree->child[2]);
+		emitCode("; i++ )\n{");
+		onlyInts = 0;
+	}
+	break;
+	case IfK:
+	{
+		emitCode("if ( ");
+		cGen(tree->child[0]);
+		emitCode(" %s ", tree->attr.name);
+		cGen(tree->child[1]);
+		emitCode(")\n{");
+	}
+	break;
+	case EndK:
+	{
+		emitCode("}");
 	}
 	break;
 	default:
@@ -108,12 +147,11 @@ static void genExp(TreeNode * tree)
 {
 	TreeNode * p1, *p2;
 	switch (tree->kind.exp) {
-
-	case CommentK:
-		emitCode("//%s", tree->attr.name);
-		break;
 	case ConstK:
-		emitCode("%d.0f", tree->attr.val);
+		if (onlyInts)
+			emitCode("%d", tree->attr.val);
+		else
+			emitCode("%d.0f", tree->attr.val);
 		break; /* ConstK */
 	case DecK:
 		emitCode("%ff", tree->attr.dval);
@@ -173,7 +211,7 @@ static void genExp(TreeNode * tree)
 		// Restore cmd buffers
 		cmdBuffer = cmdBuffer_old;
 	}
-	break; /* ConstK */
+	break;
 	case IdK:
 	{
 		TreeNode *i1, *i2, *i3, *i4, *idx1, *idx2;
@@ -210,17 +248,19 @@ static void genExp(TreeNode * tree)
 			char *cmdBuffer_old = cmdBuffer;
 			codeBuffer = 1;
 
+			onlyInts = 1; /* only ints for indices */
+
 			// Get code for indices
-			idx1->lb = (char *)malloc(sizeof(char) * 50);
-			idx1->rb = (char *)malloc(sizeof(char) * 50);
+			idx1->lb = (char *)malloc(sizeof(char) * 100);
+			idx1->rb = (char *)malloc(sizeof(char) * 100);
 			idx1->lb[0] = '\0';
 			idx1->rb[0] = '\0';
 			cGen(idx1);
 
 			if (idx2 != NULL)
 			{ /* there is also a rhs (.,x) */
-				idx2->lb = (char *)malloc(sizeof(char) * 50);
-				idx2->rb = (char *)malloc(sizeof(char) * 50);
+				idx2->lb = (char *)malloc(sizeof(char) * 100);
+				idx2->rb = (char *)malloc(sizeof(char) * 100);
 				idx2->lb[0] = '\0';
 				idx2->rb[0] = '\0';
 				cGen(idx2);
@@ -229,6 +269,8 @@ static void genExp(TreeNode * tree)
 			// Restore code buffers
 			codeBuffer = codeBuffer_old;
 			cmdBuffer = cmdBuffer_old;
+
+			onlyInts = 0; /* restore const generation to double */
 
 			// Start code generation of the indices.
 			emitCode(tree->attr.name);
@@ -332,6 +374,15 @@ static void genExp(TreeNode * tree)
 			cGen(p2); /* gen code for ac = right operand */
 		}
 		break; /* OpK */
+	case ArgsK:
+	{
+		emitCode("Ref<Vector3d> %s", tree->attr.name);
+		if (tree->child[0]!=NULL)
+		{ /* this is not the last node */
+			emitCode(", ");
+			cGen(tree->child[0]);
+		}
+	}
 	default:
 		break;
 	}

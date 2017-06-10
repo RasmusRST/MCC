@@ -17,7 +17,10 @@ comment  "%"[a-zA-Z0-9\_\+\-\*\\" "":""/"","";"\"".""("")""^"]*
 
 %%
 ("if"|"IF"|"If")		return IF;
+("for"|"FOR"|"For")		return FOR;
 ("end"|"end"|"end")		return END;
+("=="|"!="|"&&"|"||")   yylval.name=strdup(yytext); return CMP;
+("function"|"Function")  return FUN;
 
 "atan"					return ATAN;
 "atan2"					return ATAN2;
