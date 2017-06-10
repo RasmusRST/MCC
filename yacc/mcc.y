@@ -132,12 +132,6 @@ term:
         $$->child[1] = $3;
         $$->attr.op = "/";
 		}		
-	| factor '^' factor {
-		$$ = newExpNode(OpK);
-        $$->child[0] = $1;
-        $$->child[1] = $3;
-       	$$->attr.op = "^";
-		}
 	| factor  { $$ = $1; }		
 ;
 
@@ -153,7 +147,13 @@ factor :
 	| DECIMAL {
 		$$ = newExpNode(DecK);
     	$$->attr.dval = $1; 
-    	}		
+    	}
+	| factor '^' factor {
+		$$ = newExpNode(OpK);
+        $$->child[0] = $1;
+        $$->child[1] = $3;
+       	$$->attr.op = "^";
+		}		
 ;
 
 var :

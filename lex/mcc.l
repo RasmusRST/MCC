@@ -13,7 +13,7 @@ extern int isatty(int);
 
 %option nounistd
 
-comment  "%"[a-zA-Z0-9\_\+\-\*\\" "":""/"","";"\"".""("")"]*
+comment  "%"[a-zA-Z0-9\_\+\-\*\\" "":""/"","";"\"".""("")""^"]*
 
 %%
 ("if"|"IF"|"If")		return IF;

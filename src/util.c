@@ -86,6 +86,12 @@ void printTree(TreeNode * tree)
 			case WriteK:
 				printf("Write\n");
 				break;
+			case CommentK:
+				printf("Comment\n");
+				break;
+			case EndlK:
+				printf("");
+				break;
 			default:
 				printf("Unknown ExpNode kind\n");
 				break;

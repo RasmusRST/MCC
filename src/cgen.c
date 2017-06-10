@@ -56,7 +56,16 @@ static void genStmt(TreeNode * tree)
 	{
 		if (tree->prevsibling != NULL)
 		{ /* not first node */
-			if (tree->sibling->kind.exp == CommentK && tree->sibling->sibling->kind.exp == CommentK && tree->prevsibling->kind.stmt != AssignK && longComment == 0)
+			if (tree->sibling == NULL)
+			{
+				if (longComment == 1)
+				{
+					emitCode("  %s*/\n", &tree->attr.name[1]);
+				}
+				else
+					emitCode("//%s", &tree->attr.name[1]);
+			}
+			else if (tree->sibling->kind.exp == CommentK && tree->sibling->sibling->kind.exp == CommentK && tree->prevsibling->kind.stmt != AssignK && longComment == 0)
 			{
 				longComment = 1;
 				emitCode("/*%s", &tree->attr.name[1]);
