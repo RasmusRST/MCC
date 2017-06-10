@@ -36,6 +36,6 @@ comment  "%"[a-zA-Z0-9\_\+\-\*\\" "":""/"","";"\"".""("")""^"]*
 " "						; /* ignore white spaces */
 "\t"					; /* ignore tabs */
 "..."" "*"\r"*"\n"		; /* ignore MATLAB next lines */
-{comment}"\r"*"\n"		yylval.name=strdup(yytext); return COMMENT;
+{comment}"\r"*"\n"*		yylval.name=strdup(yytext); return COMMENT;
 .               		{return yytext[0];} // match all single characters
 %%

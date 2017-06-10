@@ -311,6 +311,11 @@ static void genExp(TreeNode * tree)
 			cGen(p2);
 			emitCode(")");
 		}
+		else if (*tree->attr.op == '\'')
+		{
+			cGen(p1);
+			emitCode(".transpose()");
+		}
 		else if (*tree->attr.op == '(')
 		{
 			emitCode("(");

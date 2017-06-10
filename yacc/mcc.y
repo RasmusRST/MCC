@@ -153,7 +153,12 @@ factor :
         $$->child[0] = $1;
         $$->child[1] = $3;
        	$$->attr.op = "^";
-		}		
+		}
+	| factor '\'' {
+		$$ = newExpNode(OpK);
+        $$->child[0] = $1;
+       	$$->attr.op = "\'";
+		}
 ;
 
 var :

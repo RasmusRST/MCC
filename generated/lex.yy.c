@@ -363,9 +363,9 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[58] =
     {   0,
-        0,    0,   21,   19,   16,   13,   19,   15,   12,   19,
+        0,    0,   21,   19,   16,   13,   19,   15,   12,   18,
        19,   19,   10,   12,   12,   12,   12,   12,   12,   14,
-       12,   18,    0,    0,    0,    0,    0,   10,    0,    0,
+       12,   18,   18,   18,    0,    0,    0,   10,    0,    0,
         1,   12,   12,   12,   12,   12,    0,    0,   11,    0,
         9,    0,   12,    5,    2,   12,    6,   12,    0,   17,
         0,    0,    3,    8,    7,    4,    0
@@ -413,12 +413,12 @@ static const YY_CHAR yy_meta[32] =
 
 static const flex_int16_t yy_base[60] =
     {   0,
-        0,    0,  108,  109,  109,  109,  104,  109,    0,   29,
-       22,   95,   25,   25,   75,   79,   79,   81,   20,  109,
-        0,  109,   38,   45,   39,   90,   42,    0,   48,   53,
+        0,    0,  109,  110,  110,  110,  105,  110,    0,   29,
+       22,   96,   25,   25,   76,   80,   80,   82,   20,  110,
+        0,   99,   38,   45,   39,   90,   42,    0,   48,   53,
         0,   83,   70,   79,   45,   69,   58,   69,   63,   66,
-       68,   70,   58,    0,    0,   44,    0,   34,   73,  109,
-       85,   87,   43,    0,    0,    0,  109,   41,   92
+       68,   70,   58,    0,    0,   44,    0,   34,   73,  110,
+       85,   87,   43,    0,    0,    0,  110,   41,   92
     } ;
 
 static const flex_int16_t yy_def[60] =
@@ -431,7 +431,7 @@ static const flex_int16_t yy_def[60] =
        57,   57,   58,   58,   58,   58,    0,   57,   57
     } ;
 
-static const flex_int16_t yy_nxt[141] =
+static const flex_int16_t yy_nxt[142] =
     {   0,
         4,    5,    6,    7,    8,    9,   10,    4,   11,   11,
        12,   13,   13,    9,    9,   14,   15,   16,    9,   17,
@@ -444,13 +444,14 @@ static const flex_int16_t yy_nxt[141] =
        41,   53,   30,   42,   49,   49,   29,   50,   51,   50,
        51,   52,   30,   24,   24,   29,   48,   45,   44,   43,
 
-       38,   31,   34,   33,   32,   26,   20,   57,    3,   57,
+       38,   22,   31,   34,   33,   32,   26,   20,   57,    3,
        57,   57,   57,   57,   57,   57,   57,   57,   57,   57,
        57,   57,   57,   57,   57,   57,   57,   57,   57,   57,
-       57,   57,   57,   57,   57,   57,   57,   57,   57,   57
+       57,   57,   57,   57,   57,   57,   57,   57,   57,   57,
+       57
     } ;
 
-static const flex_int16_t yy_chk[141] =
+static const flex_int16_t yy_chk[142] =
     {   0,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -463,10 +464,11 @@ static const flex_int16_t yy_chk[141] =
        41,   43,   39,   30,   49,   49,   49,   51,   51,   52,
        52,   52,   49,   59,   59,   42,   36,   34,   33,   32,
 
-       26,   18,   17,   16,   15,   12,    7,    3,   57,   57,
+       26,   22,   18,   17,   16,   15,   12,    7,    3,   57,
        57,   57,   57,   57,   57,   57,   57,   57,   57,   57,
        57,   57,   57,   57,   57,   57,   57,   57,   57,   57,
-       57,   57,   57,   57,   57,   57,   57,   57,   57,   57
+       57,   57,   57,   57,   57,   57,   57,   57,   57,   57,
+       57
     } ;
 
 static yy_state_type yy_last_accepting_state;
@@ -494,9 +496,9 @@ char *yytext;
 
 extern int isatty(int);
 
-#line 497 "generated/lex.yy.c"
-#define YY_NO_UNISTD_H 1
 #line 499 "generated/lex.yy.c"
+#define YY_NO_UNISTD_H 1
+#line 501 "generated/lex.yy.c"
 
 #define INITIAL 0
 
@@ -715,7 +717,7 @@ YY_DECL
 	{
 #line 18 "lex/mcc.l"
 
-#line 718 "generated/lex.yy.c"
+#line 720 "generated/lex.yy.c"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -748,7 +750,7 @@ yy_match:
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 109 );
+		while ( yy_base[yy_current_state] != 110 );
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
@@ -876,7 +878,7 @@ YY_RULE_SETUP
 #line 41 "lex/mcc.l"
 ECHO;
 	YY_BREAK
-#line 879 "generated/lex.yy.c"
+#line 881 "generated/lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 

@@ -62,7 +62,7 @@ Q_matrix = GNSS_KF_configclock_freq_PSD * tor_s;
 x_est_propagated = Phi_matrix * x_est_old;
 
 // 4 Propagate state estimation error covariance matrix using (315)
-P_matrix_propagated = Phi_matrix * P_matrix_old * Phi_matrix + Q_matrix;
+P_matrix_propagated = Phi_matrix * P_matrix_old * Phi_matrix.transpose() + Q_matrix;
 
 // MEASUREMENT UPDATE PHASE
 
